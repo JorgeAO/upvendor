@@ -6,4 +6,5 @@ return [
     'senderName' => 'Example.com mailer',
     'user.passwordResetTokenExpire' => 3600,
     'user.passwordMinLength' => 8,
+    'icon-framework' => \kartik\icons\Icon::FAS,
 ];
