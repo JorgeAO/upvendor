@@ -1,12 +1,12 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var string $content */
-
 use backend\assets\AppAsset;
 use yii\helpers\Html;
 
 AppAsset::register($this);
+
+$this->title = 'Bienvenido';
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -19,15 +19,16 @@ AppAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body class="d-flex flex-column h-100">
-<?php $this->beginBody() ?>
-
-<main role="main">
-    <div class="container">
-        <?= $content ?>
-    </div>
-</main>
-
-<?php $this->endBody() ?>
-</body>
+    <?php $this->beginBody() ?>
+        <main role="main">
+            <div class="container">
+                <div class="jumbotron text-center bg-transparent">
+                    <h1 class="display-4"><?= $this->title ?></h1>
+                    <p class="lead"><?= Yii::$app->name ?></p>
+                </div>
+            </div>
+        </main>
+    <?php $this->endBody() ?>
+    </body>
 </html>
 <?php $this->endPage();

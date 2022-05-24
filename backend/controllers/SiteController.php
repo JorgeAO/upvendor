@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+
+use app\models\Usuarios;
 use common\models\LoginForm;
 use Yii;
 use yii\filters\VerbFilter;
@@ -72,21 +74,61 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $objUsuarios = new Usuarios();
+
+        if ($objUsuarios->load(Yii::$app->request->post()))
+        {
+            $post = Yii::$app->request->post()["Usuarios"];
+
+            $arrUsuario = Usuarios::find()
+                ->where(["usuarios_correo" => $post["usuarios_correo"]])
+                ->all();
+
+            if (count($arrUsuario) != 1)
+            {
+                $objUsuarios->usuarios_clave = "";
+                return $this->render('login', [
+                    'usuario' => $objUsuarios,
+                    'data' => [
+                        "error" => true,
+                        "mensaje" => "No se pudo recuperar el usuario",
+                    ]
+                ]);
+            }
+
+            if ($arrUsuario[0]["fk_par_estados"] != 1)
+            {
+                $objUsuarios->usuarios_clave = "";
+                return $this->render('login', [
+                    'usuario' => $objUsuarios,
+                    'data' => [
+                        "error" => true,
+                        "mensaje" => "El usuario no se encuentra activo, por favor comuníquese con un administrador del sistema",
+                    ]
+                ]);
+            }
+
+            if ($arrUsuario[0]["usuarios_clave"] != $objUsuarios->usuarios_clave)
+            {
+                $objUsuarios->usuarios_clave = "";
+                return $this->render('login', [
+                    'usuario' => $objUsuarios,
+                    'data' => [
+                        "error" => true,
+                        "mensaje" => "La contraseña no es correcta",
+                    ]
+                ]);
+            }
+
+            unset($arrUsuario[0]["usuarios_clave"]);
+
+            Yii::$app->session->set('usuario_sesion', $arrUsuario[0]);
+                
+            return $this->render('/layouts/blank');
         }
-
-        $this->layout = 'blank';
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
 
         return $this->render('login', [
-            'model' => $model,
+            'usuario' => $objUsuarios,
         ]);
     }
 
