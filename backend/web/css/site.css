@@ -88,3 +88,19 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+/* ESTILOS PERSONALIZADOS */
+.btn-azul, .btn-azul:hover {
+    background-color: #0E25A9;
+    color: white;
+}
+
+.btn-purpura, .btn-purpura:hover {
+    background-color: #56066D;
+    color: white;
+}
+
+.navbar-purpura {
+    background-color: #56066D;
+    color: white;
+}

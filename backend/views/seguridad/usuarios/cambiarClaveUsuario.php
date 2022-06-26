@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 
 Icon::map($this);
 
-$this->title = 'Cambiar Clave';
+$this->title = 'Cambiar Clave de Usuario';
 $this->params['breadcrumbs'][] = ['label' => 'Usuarios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -18,13 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-sm-4">
-            <?= $form->field($model, 'usuarios_clave')->passwordInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'usuarios_id')->textInput(['maxlength' => true, 'readonly' => true]) ?>
         </div>
         <div class="col-sm-4">
-            <?= $form->field($model, 'usuarios_nuevaclave')->passwordInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'usuarios_nuevaclave')->passwordInput(['required' => true]) ?>
         </div>
         <div class="col-sm-4">
-            <?= $form->field($model, 'usuarios_repnuevaclave')->passwordInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'usuarios_repnuevaclave')->passwordInput(['requiered' => true]) ?>
         </div>
         <div class="col-sm-12">
             <div class="form-group">

@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             ) ?>
             <br>
-            <?= Html::button(Icon::show('save').' Guardar', [ 'class'=>'btn btn-sm btn-primary', 'id'=>'btn_guardar' ]) ?>
+            <?= Html::button(Icon::show('save').' Guardar', [ 'class'=>'btn btn-sm btn-azul', 'id'=>'btn_guardar' ]) ?>
             <br>
             <div id="div_esperar"></div>
 
@@ -70,8 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
     	$('#btn_guardar').prop('disabled',true);
 
 		$('#btn_guardar').on('click', function(){
-			//$('#div_esperar').html('<div class="alert alert-primary" role="alert">Espere por favor<div>')
-			$('#div_esperar').html('<br><div class="alert alert-info">Espere por favor</div>')
+			$('#div_esperar').html('<br><div class="alert alert-primary">Espere por favor</div>')
             
             $.ajax({
                 url: "index.php?r=permisos/guardar-permisos",
@@ -82,7 +81,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     permisos: $('#frm_permisos').serializeArray()
                 },
                 success:function(data){
-                    if (!data.error) $('#div_esperar').html('<br><div class="alert alert-success">El proceso se realizó con éxito</div>')
+                    if (!data.error){
+                        $('#div_esperar').html('<br><div class="alert alert-success">El proceso se realizó con éxito.<br>La pantalla se acualizará automaticamente en 5 segundos.</div>')
+                        setTimeout( () => { location.reload(); }, 5000 );
+                    } 
                     if (data.error) $('#div_esperar').html('<br><div class="alert alert-danger">'+data.mensaje+'</div>')
                 },
             });

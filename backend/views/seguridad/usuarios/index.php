@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h4><?= Html::encode($this->title) ?></h4>
 
     <p>
-        <?= Html::a(Icon::show('plus').' Agregar', ['create'], ['class' => 'btn btn-primary btn-sm']) ?>
+        <?= Html::a(Icon::show('plus').' Agregar', ['create'], ['class' => 'btn btn-azul btn-sm']) ?>
     </p>
 
     <?= GridView::widget([
@@ -55,8 +55,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     $strOpciones = '';
                     $strOpciones = 
                         '<div class="btn-group" role="group" aria-label="Basic example">'.
-                        Html::a(Icon::show('eye'), ['view', 'usuarios_id' => $data->usuarios_id], ['class' => 'btn btn-sm btn-primary', 'title'=>'Ver Detalles']).
-                        Html::a(Icon::show('pencil-alt'), ['update', 'usuarios_id' => $data->usuarios_id], ['class' => 'btn btn-sm btn-primary', 'title'=>'Editar']).
+                        Html::a(Icon::show('eye'), ['view', 'usuarios_id' => $data->usuarios_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Ver Detalles']).
+                        Html::a(Icon::show('pencil-alt'), ['update', 'usuarios_id' => $data->usuarios_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Editar']).
+                        Html::a(Icon::show('key'), ['cambiar-clave-usuario', 'usuarios_id' => $data->usuarios_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Cambiar Clave']).
                         Html::a(Icon::show('trash'), ['delete', 'usuarios_id' => $data->usuarios_id], [
                             'class' => 'btn btn-sm btn-danger',
                             'title'=>'Eliminar',

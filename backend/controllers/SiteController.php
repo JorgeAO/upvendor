@@ -107,7 +107,7 @@ class SiteController extends Controller
                 ]);
             }
 
-            if ($arrUsuario[0]["usuarios_clave"] != $objUsuarios->usuarios_clave)
+            if ($arrUsuario[0]["usuarios_clave"] != md5($objUsuarios->usuarios_clave))
             {
                 $objUsuarios->usuarios_clave = "";
                 return $this->render('login', [

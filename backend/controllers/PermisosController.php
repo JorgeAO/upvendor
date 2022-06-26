@@ -207,7 +207,15 @@ class PermisosController extends Controller
             }
             
             // Se agrega la opción al submenú
-            array_push($arrSubMenu, ['label'=>$value['opciones_nombre'], 'url'=>[$value['opciones_enlace'], 'options'=>['class'=>'texto-12'] ]]);
+            array_push(
+                $arrSubMenu, 
+                [
+                    'label'=>$value['opciones_nombre'], 
+                    'url'=>[
+                        $value['opciones_enlace'], 
+                    ]
+                ]
+            );
         }
         
         // Se agrega el último submenú al menú

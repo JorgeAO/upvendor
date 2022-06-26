@@ -22,7 +22,7 @@ Icon::map($this);
     ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Icon::show('save').' Guardar', ['class' => 'btn btn-sm btn-primary']) ?>
+        <?= Html::submitButton(Icon::show('save').' Guardar', ['class' => 'btn btn-sm btn-azul']) ?>
         <?= Html::a(Icon::show('times').' Cancelar', ['index'], ['class' => 'btn btn-sm btn-danger']) ?>
     </div>
 

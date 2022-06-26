@@ -24,7 +24,7 @@ $this->title = 'Iniciar Sesión';
             <?= $form->field($usuario, 'usuarios_clave')->passwordInput() ?>
 
             <div class="form-group">
-                <?= Html::submitButton(Icon::show('sign-in-alt').' Entrar', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(Icon::show('sign-in-alt').' Entrar', ['class' => 'btn btn-purpura btn-block', 'name' => 'login-button']) ?>
             </div>
 
         <?php ActiveForm::end(); ?>

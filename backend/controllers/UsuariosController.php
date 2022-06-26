@@ -82,11 +82,17 @@ class UsuariosController extends Controller
 
         $model = new Usuarios();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()))
+        {
+            $model->usuarios_clave = md5($model->usuarios_clave);
+            $model->fc = date('Y-m-d H:i:s');
+            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+
+            if ($model->save())
                 return $this->redirect(['view', 'usuarios_id' => $model->usuarios_id]);
-            }
-        } else {
+        } 
+        else 
+        {
             $model->loadDefaultValues();
         }
 
@@ -102,18 +108,91 @@ class UsuariosController extends Controller
 
         $model = new CambioClave();
 
-        if ($this->request->isPost) {
-            echo "<pre>";
-            print_r($model);
-            echo "</pre>";
-            exit();
+        if ($this->request->isPost && $model->load($this->request->post())) 
+        {
+            $cambioClave = $this->request->post()['CambioClave'];
 
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'usuarios_id' => $model->usuarios_id]);
+            // Recuperar el usuario que está en sesión
+            $usuario = new Usuarios();
+            $usuario = Usuarios::findOne(['usuarios_id' => $_SESSION['usuario_sesion']['usuarios_id']]);
+
+            // Validar que la contraseña acutal ingresada sea correcta
+            if ($usuario->usuarios_clave != md5($cambioClave["usuarios_clave"])){
+                return $this->render($this->strRuta.'cambiarClave', [
+                    'model' => $model,
+                    'data' => [
+                        "error" => true,
+                        "mensaje" => "La clave actual no es correcta",
+                    ]
+                ]);
+            }
+
+            // Validar que las contraseñas nuevas coincidan
+            if ($cambioClave['usuarios_nuevaclave'] != $cambioClave['usuarios_repnuevaclave']){
+                return $this->render($this->strRuta.'cambiarClave', [
+                    'model' => $model,
+                    'data' => [
+                        "error" => true,
+                        "mensaje" => "La claves nuevas no coinciden",
+                    ]
+                ]);
+            }
+
+            // Fijar la nueva contraseña y los datos de auditoría
+            $usuario->usuarios_clave = md5($cambioClave['usuarios_nuevaclave']);
+            $usuario->fm = date('Y-m-d H:i:s');
+            $usuario->um = $_SESSION['usuario_sesion']['usuarios_id'];
+
+            // Guardar los cambios
+            if ($usuario->save()) {
+                return $this->redirect(['view', 'usuarios_id' => $usuario->usuarios_id]);
             }
         }
 
         return $this->render($this->strRuta.'cambiarClave', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionCambiarClaveUsuario($usuarios_id)
+    {
+        $rta = PermisosController::validarPermiso(1005, 'u');
+        if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
+
+        $model = new CambioClave();
+        $model->usuarios_id = $usuarios_id;
+
+        if ($this->request->isPost && $model->load($this->request->post())) 
+        {
+            $cambioClave = $this->request->post()['CambioClave'];
+
+            // Validar que las contraseñas nuevas coincidan
+            if ($cambioClave['usuarios_nuevaclave'] != $cambioClave['usuarios_repnuevaclave']){
+                return $this->render($this->strRuta.'cambiarClaveUsuario', [
+                    'model' => $model,
+                    'data' => [
+                        "error" => true,
+                        "mensaje" => "La claves nuevas no coinciden",
+                    ]
+                ]);
+            }
+
+            // Recuperar el usuario a modificar
+            $usuario = new Usuarios();
+            $usuario = Usuarios::findOne(['usuarios_id' => $usuarios_id]);
+
+            // Fijar la nueva contraseña y los datos de auditoría
+            $usuario->usuarios_clave = md5($cambioClave['usuarios_nuevaclave']);
+            $usuario->fm = date('Y-m-d H:i:s');
+            $usuario->um = $_SESSION['usuario_sesion']['usuarios_id'];
+
+            // Guardar los cambios
+            if ($usuario->save()) {
+                return $this->redirect(['view', 'usuarios_id' => $usuario->usuarios_id]);
+            }
+        }
+
+        return $this->render($this->strRuta.'cambiarClaveUsuario', [
             'model' => $model,
         ]);
     }

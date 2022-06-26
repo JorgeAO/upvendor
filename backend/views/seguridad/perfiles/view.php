@@ -20,8 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h4><?= Html::encode($this->title) ?></h4>
 
     <p>
-        <?= Html::a(Icon::show('arrow-left').' Volver', ['index'], ['class' => 'btn btn-sm btn-primary']) ?>
-        <?= Html::a(Icon::show("pencil-alt").' Editar', ['update', 'perfiles_id' => $model->perfiles_id], ['class' => 'btn btn-sm btn-primary']) ?>
+        <?= Html::a(Icon::show('arrow-left').' Volver', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
+        <?= Html::a(Icon::show('plus').' Agregar', ['create'], ['class' => 'btn btn-azul btn-sm']) ?>
+        <?= Html::a(Icon::show("pencil-alt").' Editar', ['update', 'perfiles_id' => $model->perfiles_id], ['class' => 'btn btn-sm btn-azul']) ?>
         <?= Html::a(Icon::show("trash").' Eliminar', ['delete', 'perfiles_id' => $model->perfiles_id], [
             'class' => 'btn btn-sm btn-danger',
             'data' => [
