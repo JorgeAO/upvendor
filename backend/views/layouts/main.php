@@ -30,7 +30,7 @@ $arrMenu = PermisosController::construirMenu();
         <?php
         NavBar::begin([
             'brandLabel' => Yii::$app->name,
-            'brandUrl' => Yii::$app->homeUrl,
+            'brandUrl' => '/site/index',
             'options' => [
                 'class' => 'navbar navbar-expand-md navbar-dark navbar-purpura fixed-top',
             ],

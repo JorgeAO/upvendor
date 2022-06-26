@@ -100,6 +100,12 @@ a.desc:after {
     color: white;
 }
 
+.btn-outline-purpura, .btn-outline-purpura:hover {
+    background-color: transparent;
+    border-color: #56066D;
+    color: #56066D;
+}
+
 .navbar-purpura {
     background-color: #56066D;
     color: white;

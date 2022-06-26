@@ -11,34 +11,34 @@ $this->title = 'Iniciar Sesión';
 ?>
 
 <div class="site-login">
-    <div class="mt-5 offset-lg-3 col-lg-6">
-        <h1><?= Yii::$app->name ?></h1>
-        <h4><?= Html::encode($this->title) ?></h4>
-
-        <p>Por favor ingrese sus datos para iniciar sesión</p>
-        
-        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-            <?= $form->field($usuario, 'usuarios_correo')->textInput(['autofocus' => true]) ?>
-
+    <div class="col-sm-4 offset-sm-4" style="margin-top: 200px;">
+        <div class="col-sm-12 text-center" style="margin-bottom: 50px;">
+            <h1 class="display-4"><?= Yii::$app->name ?></h1>
+        </div>
+        <div class="col-sm-12">
+            <h4><?= Html::encode($this->title) ?></h4>
+        </div>
+        <div class="col-sm-12">
+            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            <?= $form->field($usuario, 'usuarios_correo')->textInput() ?>
             <?= $form->field($usuario, 'usuarios_clave')->passwordInput() ?>
-
             <div class="form-group">
                 <?= Html::submitButton(Icon::show('sign-in-alt').' Entrar', ['class' => 'btn btn-purpura btn-block', 'name' => 'login-button']) ?>
+                <?= Html::a('Olvidé mi clave', ['olvido'], ['class' => 'btn btn-outline-purpura btn-block']) ?>
             </div>
-
-        <?php ActiveForm::end(); ?>
-
-        <?php
-            if (isset($data))
-            {
-                if ($data['error']) { ?>
-                    <div class="alert alert-danger" role="alert">
-                        <?= Icon::show('times-circle').' '.$data['mensaje'] ?>
-                    </div>
-                <?php }
-            }
-        ?>
-
+            <?php ActiveForm::end(); ?>
+        </div>
+        <div class="col-sm-12">
+            <?php
+                if (isset($data))
+                {
+                    if ($data['error']) { ?>
+                        <div class="alert alert-danger" role="alert">
+                            <?= Icon::show('times-circle').' '.$data['mensaje'] ?>
+                        </div>
+                    <?php }
+                }
+            ?>
+        </div>
     </div>
 </div>
