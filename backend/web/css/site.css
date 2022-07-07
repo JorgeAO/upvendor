@@ -90,6 +90,11 @@ a.desc:after {
 }
 
 /* ESTILOS PERSONALIZADOS */
+.bg-purpura {
+    background-color: #56066D;
+    color: white;
+}
+
 .btn-azul, .btn-azul:hover {
     background-color: #0E25A9;
     color: white;
