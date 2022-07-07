@@ -5,24 +5,24 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "tb_pro_categorias".
+ * This is the model class for table "tb_pro_marcas".
  *
- * @property int $categoria_id
- * @property string $categoria_descripcion
+ * @property int $marca_id
+ * @property string $marca_descripcion
  * @property int $fk_par_estados
  * @property string $fc
  * @property int $uc
  * @property string|null $fm
  * @property int|null $um
  */
-class Categoria extends \yii\db\ActiveRecord
+class Marcas extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'tb_pro_categorias';
+        return 'tb_pro_marcas';
     }
 
     /**
@@ -31,10 +31,10 @@ class Categoria extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['categoria_descripcion'], 'required'],
+            [['marca_descripcion'], 'required'],
             [['fk_par_estados', 'uc', 'um'], 'integer'],
             [['fc', 'fm'], 'safe'],
-            [['categoria_descripcion'], 'string', 'max' => 100],
+            [['marca_descripcion'], 'string', 'max' => 100],
         ];
     }
 
@@ -44,8 +44,8 @@ class Categoria extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'categoria_id' => 'Código',
-            'categoria_descripcion' => 'Descripción',
+            'marca_id' => 'Código',
+            'marca_descripcion' => 'Descripción',
             'fk_par_estados' => 'Estado',
             'fc' => 'Fecha Creación',
             'uc' => 'Usuario Creación',
