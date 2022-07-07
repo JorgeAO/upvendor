@@ -9,10 +9,10 @@ use yii\grid\GridView;
 
 Icon::map($this);
 
-$this->title = 'Clientes';
+$this->title = 'Proveedores';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="cliente-index">
+<div class="proveedores-index">
 
     <h4><?= Html::encode($this->title) ?></h4>
 
@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'tableOptions' => ['class' => 'table table-striped table-hover table-sm'],
         'columns' => [
-            'cliente_id',
+            'proveedor_id',
             [
                 'label'=>'Tipo Persona',
                 'value'=>function($data) {
@@ -42,12 +42,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'fk_par_estados',
                 'filter'=>ArrayHelper::map(TipoIdentificacion::find()->asArray()->all(), 'tipoiden_id', 'tipoiden_descripcion'),
             ],
-            'cliente_identificacion',
-            'cliente_nombre',
-            'cliente_apellido',
-            'cliente_razonsocial',
-            'cliente_celular',
-            'cliente_correo',
+            'proveedor_identificacion',
+            'proveedor_nombre',
+            'proveedor_apellido',
+            'proveedor_razonsocial',
+            'proveedor_celular',
+            'proveedor_correo',
             [
                 'label'=>'Estado',
                 'value'=>function($data) {
@@ -63,9 +63,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     $strOpciones = '';
                     $strOpciones = 
                         '<div class="btn-group" role="group" aria-label="Basic example">'.
-                        Html::a(Icon::show('eye'), ['view', 'cliente_id' => $data->cliente_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Ver Detalles']).
-                        Html::a(Icon::show('pencil-alt'), ['update', 'cliente_id' => $data->cliente_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Editar']).
-                        Html::a(Icon::show('trash'), ['delete', 'cliente_id' => $data->cliente_id], [
+                        Html::a(Icon::show('eye'), ['view', 'proveedor_id' => $data->proveedor_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Ver Detalles']).
+                        Html::a(Icon::show('pencil-alt'), ['update', 'proveedor_id' => $data->proveedor_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Editar']).
+                        Html::a(Icon::show('trash'), ['delete', 'proveedor_id' => $data->proveedor_id], [
                             'class' => 'btn btn-sm btn-danger',
                             'title'=>'Eliminar',
                             'data' => [

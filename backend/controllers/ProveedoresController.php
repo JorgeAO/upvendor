@@ -2,20 +2,20 @@
 
 namespace backend\controllers;
 
-use app\models\Cliente;
-use app\models\ClienteSearch;
+use app\models\Proveedores;
+use app\models\ProveedoresSearch;
 use stdClass;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ClienteController implements the CRUD actions for Cliente model.
+ * ProveedoresController implements the CRUD actions for Proveedores model.
  */
-class ClienteController extends Controller
+class ProveedoresController extends Controller
 {
-    private $strRuta = "/clientes/cliente/";
-    private $intOpcion = 3001;
+    private $strRuta = "/productos/proveedores/";
+    private $intOpcion = 4003;
 
     /**
      * @inheritDoc
@@ -36,7 +36,7 @@ class ClienteController extends Controller
     }
 
     /**
-     * Lists all Cliente models.
+     * Lists all Proveedores models.
      *
      * @return string
      */
@@ -45,7 +45,7 @@ class ClienteController extends Controller
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
-        $searchModel = new ClienteSearch();
+        $searchModel = new ProveedoresSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render($this->strRuta.'index', [
@@ -55,23 +55,23 @@ class ClienteController extends Controller
     }
 
     /**
-     * Displays a single Cliente model.
-     * @param int $cliente_id Cliente ID
+     * Displays a single Proveedores model.
+     * @param int $proveedor_id Proveedor ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($cliente_id)
+    public function actionView($proveedor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
         return $this->render($this->strRuta.'view', [
-            'model' => $this->findModel($cliente_id),
+            'model' => $this->findModel($proveedor_id),
         ]);
     }
 
     /**
-     * Creates a new Cliente model.
+     * Creates a new Proveedores model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
@@ -80,7 +80,7 @@ class ClienteController extends Controller
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
-        $model = new Cliente();
+        $model = new Proveedores();
 
         if ($this->request->isPost) 
         {
@@ -107,7 +107,7 @@ class ClienteController extends Controller
             // Validar, si es persona natural que tenga nombre y apellido
             if ($model->fk_par_tipo_persona == 1)
             {
-                if ($model->cliente_nombre == '' || $model->cliente_apellido == '') 
+                if ($model->proveedor_nombre == '' || $model->proveedor_apellido == '') 
                 {
                     return $this->render(
                         $this->strRuta.'create', 
@@ -139,7 +139,7 @@ class ClienteController extends Controller
             }
 
             // Validar, si es persona jurídica que tenga razón social
-            if ($model->fk_par_tipo_persona == 2 && $model->cliente_razonsocial == '') 
+            if ($model->fk_par_tipo_persona == 2 && $model->proveedor_razonsocial == '') 
             {
                 return $this->render(
                     $this->strRuta.'create', 
@@ -153,18 +153,7 @@ class ClienteController extends Controller
                 );
             }
 
-            if ($model->fk_par_tipo_persona == 1) 
-            {
-                $model->cliente_razonsocial = '';
-            }
-            if ($model->fk_par_tipo_persona == 2) 
-            {
-                $model->cliente_nombre = '';
-                $model->cliente_apellido = '';
-                $model->cliente_fnacimiento = '';
-            }
-
-            if ($model->cliente_ttodatos == 0)
+            if ($model->proveedor_ttodatos == 0)
             {
                 return $this->render(
                     $this->strRuta.'create', 
@@ -178,12 +167,22 @@ class ClienteController extends Controller
                 );
             }
 
-            $model->cliente_fttodatos = date('Y-m-d H:i:s');
+            if ($model->fk_par_tipo_persona == 1) 
+            {
+                $model->proveedor_razonsocial = '';
+            }
+            if ($model->fk_par_tipo_persona == 2) 
+            {
+                $model->proveedor_nombre = '';
+                $model->proveedor_apellido = '';
+                $model->proveedor_fnacimiento = '';
+            }
+            $model->proveedor_fttodatos = date('Y-m-d H:i:s');
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
 
             if ($model->save()) {
-                return $this->redirect(['view', 'cliente_id' => $model->cliente_id]);
+                return $this->redirect(['view', 'proveedor_id' => $model->proveedor_id]);
             }
         } 
         else 
@@ -197,18 +196,18 @@ class ClienteController extends Controller
     }
 
     /**
-     * Updates an existing Cliente model.
+     * Updates an existing Proveedores model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $cliente_id Cliente ID
+     * @param int $proveedor_id Proveedor ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($cliente_id)
+    public function actionUpdate($proveedor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
-        $model = $this->findModel($cliente_id);
+        $model = $this->findModel($proveedor_id);
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
@@ -233,7 +232,7 @@ class ClienteController extends Controller
             // Validar, si es persona natural que tenga nombre y apellido
             if ($model->fk_par_tipo_persona == 1)
             {
-                if ($model->cliente_nombre == '' || $model->cliente_apellido == '') 
+                if ($model->proveedor_nombre == '' || $model->proveedor_apellido == '') 
                 {
                     return $this->render(
                         $this->strRuta.'create', 
@@ -265,7 +264,7 @@ class ClienteController extends Controller
             }
 
             // Validar, si es persona jurídica que tenga razón social
-            if ($model->fk_par_tipo_persona == 2 && $model->cliente_razonsocial == '') 
+            if ($model->fk_par_tipo_persona == 2 && $model->proveedor_razonsocial == '') 
             {
                 return $this->render(
                     $this->strRuta.'create', 
@@ -281,16 +280,16 @@ class ClienteController extends Controller
 
             if ($model->fk_par_tipo_persona == 1) 
             {
-                $model->cliente_razonsocial = '';
+                $model->proveedor_razonsocial = '';
             }
             if ($model->fk_par_tipo_persona == 2) 
             {
-                $model->cliente_nombre = '';
-                $model->cliente_apellido = '';
-                $model->cliente_fnacimiento = '';
+                $model->proveedor_nombre = '';
+                $model->proveedor_apellido = '';
+                $model->proveedor_fnacimiento = '';
             }
 
-            if ($model->cliente_ttodatos == 0)
+            if ($model->proveedor_ttodatos == 0)
             {
                 return $this->render(
                     $this->strRuta.'create', 
@@ -308,7 +307,7 @@ class ClienteController extends Controller
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
             
             if ($model->save())
-                return $this->redirect(['view', 'cliente_id' => $model->cliente_id]);
+                return $this->redirect(['view', 'proveedor_id' => $model->proveedor_id]);
         }
 
         return $this->render($this->strRuta.'update', [
@@ -317,32 +316,32 @@ class ClienteController extends Controller
     }
 
     /**
-     * Deletes an existing Cliente model.
+     * Deletes an existing Proveedores model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $cliente_id Cliente ID
+     * @param int $proveedor_id Proveedor ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($cliente_id)
+    public function actionDelete($proveedor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
-        $this->findModel($cliente_id)->delete();
+        $this->findModel($proveedor_id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Cliente model based on its primary key value.
+     * Finds the Proveedores model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $cliente_id Cliente ID
-     * @return Cliente the loaded model
+     * @param int $proveedor_id Proveedor ID
+     * @return Proveedores the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($cliente_id)
+    protected function findModel($proveedor_id)
     {
-        if (($model = Cliente::findOne(['cliente_id' => $cliente_id])) !== null) {
+        if (($model = Proveedores::findOne(['proveedor_id' => $proveedor_id])) !== null) {
             return $model;
         }
 
