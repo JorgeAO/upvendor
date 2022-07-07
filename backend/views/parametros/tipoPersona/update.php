@@ -2,17 +2,14 @@
 
 use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\TipoPersona */
-
-$this->title = 'Update Tipo Persona: ' . $model->tipopers_id;
-$this->params['breadcrumbs'][] = ['label' => 'Tipo Personas', 'url' => ['index']];
+$this->title = 'Editar Tipo de Persona: ' . $model->tipopers_id." - ".$model->tipopers_descripcion;
+$this->params['breadcrumbs'][] = ['label' => 'Tipo Persona', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->tipopers_id, 'url' => ['view', 'tipopers_id' => $model->tipopers_id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Editar';
 ?>
 <div class="tipo-persona-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h4><?= Html::encode($this->title) ?></h4>
 
     <?= $this->render('_form', [
         'model' => $model,
