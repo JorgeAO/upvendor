@@ -132,13 +132,7 @@ class PermisosController extends Controller
             ->andwhere('fk_seg_opciones = '.$intOpcion)
             ->all();
         
-        if (count($rslConsulta) != 1)
-            return [
-                'error' => true,
-                'mensaje' => 'No se pudo validar el permiso'
-            ];
-
-        if ($rslConsulta[0][$chrAccion] == 0)
+        if (count($rslConsulta) != 1 || $rslConsulta[0][$chrAccion] == 0)
             return [
                 'error' => true,
                 'mensaje' => 'Usted no posee permisos para ejecutar esta acción'
@@ -172,6 +166,7 @@ class PermisosController extends Controller
             where modu.fk_par_estados = 1
             and opci.fk_par_estados = 1
             and perm.r = 1
+            and opci.opciones_enlace != ''
             order by opci.fk_seg_modulos asc, opci.opciones_nombre asc";
 
         // Ejecutar la consulta de los permisos del perfil

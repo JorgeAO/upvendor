@@ -7,10 +7,10 @@ use yii\grid\GridView;
 
 Icon::map($this);
 
-$this->title = 'Categoría';
+$this->title = 'Atributos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="categoria-index">
+<div class="atributos-index">
     <h4><?= Html::encode($this->title) ?></h4>
     <p>
         <?= Html::a(Icon::show('plus').' Agregar', ['create'], ['class' => 'btn btn-azul btn-sm']) ?>
@@ -20,8 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'tableOptions' => ['class' => 'table table-striped table-hover table-sm'],
         'columns' => [
-            'categoria_id',
-            'categoria_descripcion',
+            'atributo_id',
+            'atributo_descripcion',
             [
                 'label'=>'Estado',
                 'value'=>function($data) {
@@ -37,9 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     $strOpciones = '';
                     $strOpciones = 
                         '<div class="btn-group" role="group" aria-label="Basic example">'.
-                        Html::a(Icon::show('eye'), ['view', 'categoria_id' => $data->categoria_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Ver Detalles']).
-                        Html::a(Icon::show('pencil-alt'), ['update', 'categoria_id' => $data->categoria_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Editar']).
-                        Html::a(Icon::show('trash'), ['delete', 'categoria_id' => $data->categoria_id], [
+                        Html::a(Icon::show('list'), ['valores', 'atributo_id' => $data->atributo_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Ver Valores']).
+                        Html::a(Icon::show('eye'), ['view', 'atributo_id' => $data->atributo_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Ver Detalles']).
+                        Html::a(Icon::show('pencil-alt'), ['update', 'atributo_id' => $data->atributo_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Editar']).
+                        Html::a(Icon::show('trash'), ['delete', 'atributo_id' => $data->atributo_id], [
                             'class' => 'btn btn-sm btn-danger',
                             'title'=>'Eliminar',
                             'data' => [
@@ -55,5 +56,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ],
     ]); ?>
-    
+
+
 </div>

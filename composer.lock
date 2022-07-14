@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32f3f3eb02f289604a5fdceff84d248f",
+    "content-hash": "99d5f48d1ad1b27b92e28ece1697170d",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -207,6 +207,55 @@
                 "source": "https://github.com/lipis/flag-icon-css/tree/3.5.0"
             },
             "time": "2020-06-10T11:53:19+00:00"
+        },
+        {
+            "name": "derekisbusy/yii2-popper",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/derekisbusy/yii2-popper.git",
+                "reference": "9567783f72fc0e18e81b4ca73fbf30704be51eae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/derekisbusy/yii2-popper/zipball/9567783f72fc0e18e81b4ca73fbf30704be51eae",
+                "reference": "9567783f72fc0e18e81b4ca73fbf30704be51eae",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "~2.0.0"
+            },
+            "default-branch": true,
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "derekisbusy\\popper\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Derek Gifford",
+                    "email": "derekisbusy@gmail.com"
+                }
+            ],
+            "description": "Popper.js assets for Yii2",
+            "keywords": [
+                " popper",
+                " poppers",
+                " popups",
+                " tooltips",
+                "extension",
+                "yii2"
+            ],
+            "support": {
+                "issues": "https://github.com/derekisbusy/yii2-popper/issues",
+                "source": "https://github.com/derekisbusy/yii2-popper/tree/master"
+            },
+            "time": "2019-06-23T21:14:28+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -5682,7 +5731,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "kartik-v/yii2-icons": 20
+        "kartik-v/yii2-icons": 20,
+        "derekisbusy/yii2-popper": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

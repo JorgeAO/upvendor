@@ -90,6 +90,10 @@ a.desc:after {
 }
 
 /* ESTILOS PERSONALIZADOS */
+.encabezado-acordeon:hover {
+    cursor: pointer;
+}
+
 .bg-purpura {
     background-color: #56066D;
     color: white;
