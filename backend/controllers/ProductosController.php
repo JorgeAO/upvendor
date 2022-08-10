@@ -27,7 +27,7 @@ class ProductosController extends Controller
             parent::behaviors(),
             [
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
@@ -219,5 +219,39 @@ class ProductosController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionListar()
+    {
+        $rta = PermisosController::validarPermiso($this->intOpcion, 'l');
+        if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
+
+        $sqlWhere = '';
+
+        foreach (Yii::$app->request->post() as $key => $value) 
+        {
+            if ($value != '')
+            {
+                if (in_array($key[0], array('>', '<', '*', '~')))
+                {
+                    $sqlWhere .= substr($key, 1, strlen($key))." ".$key[0]." '".$value."' and ";
+                }
+                else
+                {
+                    $sqlWhere .= $key." = '".$value."' and ";
+                }
+            }
+        }
+        
+        $sqlWhere = $sqlWhere != '' ? rtrim($sqlWhere, " and ") : "";
+
+        $sqlSentencia = "select * from tb_pro_productos";
+        $sqlSentencia = $sqlWhere != '' ? $sqlSentencia." where ".$sqlWhere.";" : $sqlSentencia;
+
+        $cnxConexion = Yii::$app->db;
+        $stmtSentencia = $cnxConexion->createCommand($sqlSentencia);
+        $resultado = $stmtSentencia->queryAll();
+        
+        echo json_encode($resultado);
     }
 }

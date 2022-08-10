@@ -49,10 +49,7 @@ Icon::map($this);
             <div id="caracteristicas" class="collapse" aria-labelledby="headingCaracteristicas" data-parent="#accordion">
                 <div class="card-body">
                     <div class="row">
-                        <button type="button" class="btn btn-azul btn-sm" onclick="agregarFila()">
-                            <?= Icon::show('plus-circle') ?> Agregar Atributo
-                        </button>
-                        <table class="table table-bordered table-sm table-striped table-hover mt-3" id="tblAtributos">
+                        <table class="table table-bordered table-sm table-striped table-hover" id="tblAtributos">
                             <thead>
                                 <tr>
                                     <th scope="col">Atributo</th>
@@ -76,6 +73,9 @@ Icon::map($this);
                                 ?>
                             </tbody>
                         </table>
+                        <button type="button" class="btn btn-azul btn-sm mt-2" onclick="agregarFila()">
+                            <?= Icon::show('plus-circle') ?> Agregar Atributo
+                        </button>
                     </div>
                 </div>
             </div>
@@ -137,9 +137,8 @@ Icon::map($this);
     function agregarFila()
     {
         this.idAtributo = this.idAtributo+1;
-        console.info(this.idAtributo);
         let fila = `<tr id="atr_`+idAtributo+`">
-                <th><select class="form-control form-control-sm" name="atributos[`+idAtributo+`][atributo_`+idAtributo+`]" id="atributo_`+idAtributo+`" onchange="cargarValores(`+idAtributo+`)"></select></th>
+                <td><select class="form-control form-control-sm" name="atributos[`+idAtributo+`][atributo_`+idAtributo+`]" id="atributo_`+idAtributo+`" onchange="cargarValores(`+idAtributo+`)"></select></td>
                 <td><select class="form-control form-control-sm" name="atributos[`+idAtributo+`][atrivalor_`+idAtributo+`]" id="atrivalor_`+idAtributo+`"></select></td>
                 <td>
                     <button type="button" class="btn btn-danger btn-sm" onclick="quitarFila(`+idAtributo+`)"><?= Icon::show('minus-circle') ?></button>

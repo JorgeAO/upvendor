@@ -257,8 +257,6 @@ class UsuariosController extends Controller
     {
         unset($_SESSION['usuario_sesion']);
 
-        return $this->render('/site/index', [
-            'usuario' => [],
-        ]);
+        return $this->redirect(['/site/login']);
     }
 }

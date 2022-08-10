@@ -1,5 +1,6 @@
 <?php
 use app\models\Estados;
+use app\models\Marcas;
 use kartik\icons\Icon;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -27,7 +28,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'producto_nombre',
             'producto_descripcion',
             'producto_referencia',
-            'producto_stock',
+            [
+                'label'=>'Marca',
+                'value'=>function($data) {
+                    return Marcas::find()->where(['marca_id'=>$data->fk_pro_marcas])->all()[0]->marca_descripcion;
+                },
+                'attribute'=>'fk_pro_marcas',
+                'filter'=>ArrayHelper::map(Marcas::find()->asArray()->all(), 'marcas_id', 'marca_descripcion'),
+            ],
             [
                 'label'=>'Estado',
                 'value'=>function($data) {

@@ -169,10 +169,12 @@ class ProveedoresController extends Controller
 
             if ($model->fk_par_tipo_persona == 1) 
             {
+                $model->proveedor_nombrecompleto = $model->proveedor_nombre.' '.$model->proveedor_apellido;
                 $model->proveedor_razonsocial = '';
             }
             if ($model->fk_par_tipo_persona == 2) 
             {
+                $model->proveedor_nombrecompleto = $model->proveedor_razonsocial;
                 $model->proveedor_nombre = '';
                 $model->proveedor_apellido = '';
                 $model->proveedor_fnacimiento = '';
@@ -280,10 +282,12 @@ class ProveedoresController extends Controller
 
             if ($model->fk_par_tipo_persona == 1) 
             {
+                $model->proveedor_nombrecompleto = $model->proveedor_nombre.' '.$model->proveedor_apellido;
                 $model->proveedor_razonsocial = '';
             }
             if ($model->fk_par_tipo_persona == 2) 
             {
+                $model->proveedor_nombrecompleto = $model->proveedor_razonsocial;
                 $model->proveedor_nombre = '';
                 $model->proveedor_apellido = '';
                 $model->proveedor_fnacimiento = '';

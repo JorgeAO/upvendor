@@ -13,7 +13,7 @@ $this->title = 'Iniciar Sesión';
 <div class="site-login">
     <div class="col-sm-4 offset-sm-4" style="margin-top: 200px;">
         <div class="col-sm-12 text-center" style="margin-bottom: 50px;">
-            <h1 class="display-4"><?= Yii::$app->name ?></h1>
+            <img src="logo_250x250.png">
         </div>
         <div class="col-sm-12">
             <h4><?= Html::encode($this->title) ?></h4>

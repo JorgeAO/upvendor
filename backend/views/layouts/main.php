@@ -29,14 +29,17 @@ $arrMenu = PermisosController::construirMenu();
     <header>
         <?php
         NavBar::begin([
-            'brandLabel' => Yii::$app->name,
+            //'brandLabel' => Yii::$app->name,
+            'brandLabel' => '<img src="logo_48x48.png"/>',
             'brandUrl' => '/site/index',
             'options' => [
-                'class' => 'navbar navbar-expand-md navbar-dark navbar-purpura fixed-top',
+                'class' => 'navbar navbar-expand-md navbar-light fixed-top',
+                //'style' => 'font-family: Qualy Bold'
             ],
         ]);
 
         echo Nav::widget([
+            'encodeLabels' => false,
             'options' => ['class' => 'navbar-nav'],
             'items' => $arrMenu,
         ]);

@@ -46,7 +46,7 @@ class Proveedores extends \yii\db\ActiveRecord
             [['proveedor_fttodatos', 'proveedor_fnacimiento', 'fc', 'fm'], 'safe'],
             [['proveedor_identificacion'], 'string', 'max' => 20],
             [['proveedor_nombre', 'proveedor_apellido', 'proveedor_correo'], 'string', 'max' => 100],
-            [['proveedor_razonsocial'], 'string', 'max' => 200],
+            [['proveedor_razonsocial', 'proveedor_nombrecompleto'], 'string', 'max' => 200],
             [['proveedor_celular'], 'string', 'max' => 10],
             [['proveedor_ttodatos'], 'string', 'max' => 1],
         ];
@@ -65,6 +65,7 @@ class Proveedores extends \yii\db\ActiveRecord
             'proveedor_nombre' => 'Nombre',
             'proveedor_apellido' => 'Apellido',
             'proveedor_razonsocial' => 'Razón Social',
+            'proveedor_nombrecompleto' => 'Nombre Completo',
             'proveedor_celular' => 'Celular',
             'proveedor_correo' => 'Correo Electrónico',
             'proveedor_ttodatos' => 'Acepta Tto. de Datos',

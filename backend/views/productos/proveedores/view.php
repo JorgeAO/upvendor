@@ -106,7 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Acciones Rápidas
                 </div>
                 <div class="card-body">
-                    <?= Html::a(Icon::show('shopping-bag').' Nueva Compra', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
+                    <?= Html::a(Icon::show('cart-arrow-down').' Nueva Compra', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
                     <?= Html::a(Icon::show('chart-line').' Ver Compras', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
                 </div>
             </div>

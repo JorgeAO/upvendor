@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use app\models\Permisos;
 use app\models\PermisosSearch;
+use kartik\icons\Icon;
 use stdClass;
 use Yii;
 use yii\db\Query;
@@ -195,7 +196,7 @@ class PermisosController extends Controller
                 $intModulo = $value['fk_seg_modulos'];
             
                 // Se cambia el nombre del menú
-                $strModulo = $value['modulo'];
+                $strModulo = '<i class="fas fa-'.$value['icono'].'"></i> '.$value['modulo'];
 
                 // Se crea un nuevo submenu
                 $arrSubMenu = [];
@@ -206,6 +207,9 @@ class PermisosController extends Controller
                 $arrSubMenu, 
                 [
                     'label'=>$value['opciones_nombre'], 
+                    'options' => [
+                        'class' => 'text-white'
+                    ],
                     'url'=>[
                         $value['opciones_enlace'], 
                     ]
@@ -220,7 +224,7 @@ class PermisosController extends Controller
         array_push(
             $arrMenu, 
             [
-                'label'=>$_SESSION['usuario_sesion']['usuarios_nombre'].' '.$_SESSION['usuario_sesion']['usuarios_apellido'], 
+                'label' => '<i class="fas fa-user"></i> '.$_SESSION['usuario_sesion']['usuarios_nombre'].' '.$_SESSION['usuario_sesion']['usuarios_apellido'], 
                 'items'=>[
                     [
                         'label'=>'Salir', 

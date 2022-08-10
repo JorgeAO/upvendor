@@ -95,27 +95,32 @@ a.desc:after {
 }
 
 .bg-purpura {
-    background-color: #56066D;
+    background-color: #8b05be;
     color: white;
 }
 
 .btn-azul, .btn-azul:hover {
-    background-color: #0E25A9;
+    background-color: #13b9f3;
     color: white;
 }
 
 .btn-purpura, .btn-purpura:hover {
-    background-color: #56066D;
+    background-color: #8b05be;
     color: white;
 }
 
 .btn-outline-purpura, .btn-outline-purpura:hover {
     background-color: transparent;
-    border-color: #56066D;
-    color: #56066D;
+    border-color: #8b05be;
+    color: #8b05be;
+}
+
+.btn-verde, .btn-verde:hover {
+    background-color: #d4e21a;
+    color: black;
 }
 
 .navbar-purpura {
-    background-color: #56066D;
+    background-color: #8b05be;
     color: white;
 }
