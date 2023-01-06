@@ -1,32 +1,44 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap4\ActiveForm $form */
-/** @var \common\models\LoginForm $model */
-
+use kartik\icons\Icon;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
-$this->title = 'Login';
+Icon::map($this);
+
+$this->title = 'Iniciar Sesión';
+
 ?>
+
 <div class="site-login">
-    <div class="mt-5 offset-lg-3 col-lg-6">
-        <h1><?= Html::encode($this->title) ?></h1>
-
-        <p>Please fill out the following fields to login:</p>
-
-        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
-            <?= $form->field($model, 'password')->passwordInput() ?>
-
-            <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
+    <div class="col-sm-4 offset-sm-4">
+        <div class="col-sm-12 text-center" style="margin-bottom: 10px;">
+            <img src="logo_250x250.png">
+        </div>
+        <div class="col-sm-12">
+            <h4><?= Html::encode($this->title) ?></h4>
+        </div>
+        <div class="col-sm-12">
+            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            <?= $form->field($usuario, 'usuarios_correo')->textInput() ?>
+            <?= $form->field($usuario, 'usuarios_clave')->passwordInput() ?>
             <div class="form-group">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(Icon::show('sign-in-alt').' Entrar', ['class' => 'btn btn-purpura btn-block', 'name' => 'login-button']) ?>
+                <?= Html::a('Olvidé mi clave', ['olvido'], ['class' => 'btn btn-outline-purpura btn-block']) ?>
             </div>
-
-        <?php ActiveForm::end(); ?>
+            <?php ActiveForm::end(); ?>
+        </div>
+        <div class="col-sm-12">
+            <?php
+                if (isset($data))
+                {
+                    if ($data['error']) { ?>
+                        <div class="alert alert-danger" role="alert">
+                            <?= Icon::show('times-circle').' '.$data['mensaje'] ?>
+                        </div>
+                    <?php }
+                }
+            ?>
+        </div>
     </div>
 </div>
