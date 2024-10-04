@@ -9,17 +9,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * UsuariosController implements the CRUD actions for Usuarios model.
- */
 class UsuariosController extends Controller
 {
     private $strRuta = "/seguridad/usuarios/";
     private $intOpcion = 1002;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -35,11 +29,6 @@ class UsuariosController extends Controller
         );
     }
 
-    /**
-     * Lists all Usuarios models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -54,12 +43,6 @@ class UsuariosController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Usuarios model.
-     * @param int $usuarios_id Código
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($usuarios_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -70,11 +53,6 @@ class UsuariosController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Usuarios model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -84,6 +62,8 @@ class UsuariosController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->usuarios_nombre = mb_strtoupper($model->usuarios_nombre, 'UTF-8');
+            $model->usuarios_apellido = mb_strtoupper($model->usuarios_apellido, 'UTF-8');
             $model->usuarios_clave = md5($model->usuarios_clave);
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
@@ -99,6 +79,41 @@ class UsuariosController extends Controller
         return $this->render($this->strRuta.'create', [
             'model' => $model,
         ]);
+    }
+
+    public function actionUpdate($usuarios_id)
+    {
+        $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
+        if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
+
+        $model = $this->findModel($usuarios_id);
+
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'usuarios_id' => $model->usuarios_id]);
+        }
+
+        return $this->render($this->strRuta.'update', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionDelete($usuarios_id)
+    {
+        $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
+        if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
+
+        $this->findModel($usuarios_id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    protected function findModel($usuarios_id)
+    {
+        if (($model = Usuarios::findOne(['usuarios_id' => $usuarios_id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 
     public function actionCambiarClave()
@@ -195,62 +210,6 @@ class UsuariosController extends Controller
         return $this->render($this->strRuta.'cambiarClaveUsuario', [
             'model' => $model,
         ]);
-    }
-
-    /**
-     * Updates an existing Usuarios model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $usuarios_id Código
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($usuarios_id)
-    {
-        $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
-        if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
-
-        $model = $this->findModel($usuarios_id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'usuarios_id' => $model->usuarios_id]);
-        }
-
-        return $this->render($this->strRuta.'update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Usuarios model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $usuarios_id Código
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($usuarios_id)
-    {
-        $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
-        if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
-
-        $this->findModel($usuarios_id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Usuarios model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $usuarios_id Código
-     * @return Usuarios the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($usuarios_id)
-    {
-        if (($model = Usuarios::findOne(['usuarios_id' => $usuarios_id])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 
     public function actionCerrarSesion()

@@ -3,21 +3,15 @@ namespace backend\controllers;
 
 use app\models\TipoPersona;
 use app\models\TipoPersonaSearch;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * TipoPersonaController implements the CRUD actions for TipoPersona model.
- */
 class TipoPersonaController extends Controller
 {
     private $strRuta = "/parametros/tipoPersona/";
     private $intOpcion = 2002;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -33,11 +27,6 @@ class TipoPersonaController extends Controller
         );
     }
 
-    /**
-     * Lists all TipoPersona models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -52,12 +41,6 @@ class TipoPersonaController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single TipoPersona model.
-     * @param int $tipopers_id Tipopers ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($tipopers_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -68,11 +51,6 @@ class TipoPersonaController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new TipoPersona model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -82,6 +60,7 @@ class TipoPersonaController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->tipopers_descripcion = mb_strtoupper($model->tipopers_descripcion, 'UTF-8');
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
 
@@ -97,13 +76,6 @@ class TipoPersonaController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing TipoPersona model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $tipopers_id Tipopers ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($tipopers_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -113,6 +85,7 @@ class TipoPersonaController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->tipopers_descripcion = mb_strtoupper($model->tipopers_descripcion, 'UTF-8');
             $model->fm = date('Y-m-d H:i:s');
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
             
@@ -125,13 +98,6 @@ class TipoPersonaController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing TipoPersona model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $tipopers_id Tipopers ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($tipopers_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -142,13 +108,6 @@ class TipoPersonaController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the TipoPersona model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $tipopers_id Tipopers ID
-     * @return TipoPersona the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($tipopers_id)
     {
         if (($model = TipoPersona::findOne(['tipopers_id' => $tipopers_id])) !== null) {

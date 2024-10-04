@@ -41,19 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     switch ($data->fk_com_estados_compra)
                     {
                         case '1':
-                            $color = 'primary';
-                            break;
-                        case '2':
-                            $color = 'warning';
-                            break;
-                        case '3':
                             $color = 'success';
                             break;
-                        case '4':
+                        case '2':
                             $color = 'danger';
-                            break;
-                        case '5':
-                            $color = 'secondary';
                             break;
                         default:
                             break;
@@ -72,15 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     $strOpciones = 
                         '<div class="btn-group" role="group" aria-label="Basic example">'.
                         Html::a(Icon::show('eye'), ['view', 'compra_id' => $data->compra_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Ver Detalles']).
-                        Html::a(Icon::show('pencil-alt'), ['update', 'compra_id' => $data->compra_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Editar']).
-                        Html::a(Icon::show('trash'), ['delete', 'compra_id' => $data->compra_id], [
-                            'class' => 'btn btn-sm btn-danger',
-                            'title'=>'Eliminar',
-                            'data' => [
-                                'confirm' => '¿Está seguro que desea eliminar el registro?',
-                                'method' => 'post',
-                            ],
-                        ]).
+                        ($data->fk_com_estados_compra == 1 ? Html::a(Icon::show('pencil-alt'), ['update', 'compra_id' => $data->compra_id], ['class' => 'btn btn-sm btn-azul', 'title'=>'Editar']) : '').
                         '</div>'
                         ;
 

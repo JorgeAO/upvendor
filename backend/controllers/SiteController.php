@@ -125,6 +125,8 @@ class SiteController extends Controller
             return $this->render('/layouts/blank');
         }
 
+        $layout = 'blank';
+
         return $this->render('login', [
             'usuario' => $objUsuarios,
         ]);

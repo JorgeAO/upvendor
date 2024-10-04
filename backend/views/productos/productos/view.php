@@ -1,4 +1,6 @@
 <?php
+
+use app\models\Categoria;
 use app\models\Estados;
 use app\models\Marcas;
 use kartik\icons\Icon;
@@ -40,25 +42,57 @@ $this->params['breadcrumbs'][] = $this->title;
                     'producto_nombre',
                     'producto_descripcion',
                     'producto_referencia',
-                    'producto_stock',
-                    'producto_alertastock',
+                    [
+                        'label' => 'Categoría',
+                        'value' => function($data) {
+                            return Categoria::find()->where(['categoria_id' => $data->fk_pro_categoria])->all()[0]->categoria_descripcion;
+                        }
+                    ],
+                    [
+                        'label' => 'Cantidad en Stock',
+                        'format'=>'html',
+                        'value' => function($data) {
+                            if ($data['producto_stock'] == 0) {
+                                return $data['producto_stock'] . ' <span class="badge badge-danger">Alerta! Stock en estado crítico</span>';
+                            }
+                            else if ($data['producto_stock'] < $data['producto_alertastock'] && $data['producto_stock'] > 0) {
+                                return $data['producto_stock'] . ' <span class="badge badge-danger">Atención! El producto se está agotando</span>';
+                            }
+                            else if ($data['producto_stock'] == $data['producto_alertastock']) {
+                                return $data['producto_stock'] . ' <span class="badge badge-warning">Atención! Últimas unidades</span>';
+                            }
+                            else {
+                                return $data['producto_stock'];
+                            }
+                        },
+                        'visible' => $model->fk_pro_categoria != 2,
+                    ],
+                    [
+                        'label' => 'Alerta de Stock',
+                        'value' => function($data) {
+                            return $data->producto_alertastock;
+                        },
+                        'visible' => $model->fk_pro_categoria != 2,
+                    ],
                     [
                         'label' => 'Precio de Compra',
                         'value' => function($data){
-                            return Yii::$app->formatter->asCurrency($data->producto_preciocompra);
+                            return Yii::$app->formatter->asCurrency($data->producto_preciocompra, '$');
                         },
+                        'visible' => $model->fk_pro_categoria != 2,
                     ],
                     [
                         'label' => 'Precio de Venta',
                         'value' => function($data){
-                            return Yii::$app->formatter->asCurrency($data->producto_precioventa);
+                            return Yii::$app->formatter->asCurrency($data->producto_precioventa, '$');
                         },
                     ],
                     [
                         'label'=>'Marca',
                         'value'=>function($data){
                             return Marcas::find()->where(['marca_id'=>$data->fk_pro_marcas])->all()[0]->marca_descripcion;
-                        }
+                        },
+                        'visible' => $model->fk_pro_categoria != 2,
                     ],
                     [
                         'label'=>'Estado',
@@ -74,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]) ?>
         </div>
         <div class="col-sm-6">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header bg-purpura">
                     Atributos
                 </div>
@@ -95,7 +129,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </table>
                 </div>
             </div>
-            <div class="card mt-2">
+            <div class="card mb-2" hidden>
                 <div class="card-header bg-purpura">
                     Acciones Rápidas
                 </div>

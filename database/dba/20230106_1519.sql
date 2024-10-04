@@ -15,4 +15,8 @@ CREATE TABLE `upvendor`.`tb_pro_impuestos` (
 INSERT INTO `tb_seg_opciones` (`opciones_id`, `fk_seg_modulos`, `opciones_nombre`, `opciones_enlace`, `fk_par_estados`) 
 VALUES ('4007', '4', 'Impuestos', '/impuestos/index', '1');
 
+ALTER TABLE `tb_pro_productos` 
+    ADD `producto_porc_imp` FLOAT NOT NULL AFTER `producto_precioventa`, 
+    ADD `productos_precio_con_imp` FLOAT NOT NULL AFTER `producto_porc_imp`;
+
 UPDATE `tb_seg_dba` SET `dba_ejecutado` = '1' WHERE `dba_codigo` = '20230106_1519';

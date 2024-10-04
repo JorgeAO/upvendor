@@ -4,30 +4,13 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "tb_seg_perfiles".
- *
- * @property int $perfiles_id
- * @property string $perfiles_descripcion
- * @property int $fk_par_estados
- * @property string $fc
- * @property int $uc
- * @property string|null $fm
- * @property int|null $um
- */
 class Perfiles extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'tb_seg_perfiles';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -38,9 +21,6 @@ class Perfiles extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [

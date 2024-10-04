@@ -99,7 +99,7 @@ a.desc:after {
 }
 
 .bg-purpura {
-    background-color: #8b05be;
+    background-color: #563d7c;
     color: white;
 }
 
@@ -109,14 +109,14 @@ a.desc:after {
 }
 
 .btn-purpura, .btn-purpura:hover {
-    background-color: #8b05be;
+    background-color: #563d7c;
     color: white;
 }
 
 .btn-outline-purpura, .btn-outline-purpura:hover {
     background-color: transparent;
-    border-color: #8b05be;
-    color: #8b05be;
+    border-color: #563d7c;
+    color: #563d7c;
 }
 
 .btn-verde, .btn-verde:hover {
@@ -125,6 +125,6 @@ a.desc:after {
 }
 
 .navbar-purpura {
-    background-color: #8b05be;
+    background-color: #563d7c;
     color: white;
 }

@@ -5,23 +5,18 @@ namespace backend\controllers;
 use app\models\Compras;
 use app\models\ComprasProductos;
 use app\models\ComprasSearch;
+use app\models\Productos;
 use app\models\Proveedores;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * ComprasController implements the CRUD actions for Compras model.
- */
 class ComprasController extends Controller
 {
     private $strRuta = "/compras/compras/";
     private $intOpcion = 5001;
-
-    /**
-     * @inheritDoc
-     */
+    
     public function behaviors()
     {
         return array_merge(
@@ -36,12 +31,7 @@ class ComprasController extends Controller
             ]
         );
     }
-
-    /**
-     * Lists all Compras models.
-     *
-     * @return string
-     */
+    
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -55,13 +45,7 @@ class ComprasController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
-    /**
-     * Displays a single Compras model.
-     * @param int $compra_id Compra ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    
     public function actionView($compra_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -69,7 +53,8 @@ class ComprasController extends Controller
 
         $sqlSentencia = "select 
                 cp.*,
-                p.producto_nombre
+                p.producto_nombre,
+                p.producto_descripcion
             from tb_com_compras_productos cp
             join tb_pro_productos p on (p.producto_id = cp.fk_pro_productos)
             where cp.fk_com_compras = ".$compra_id.";";
@@ -83,12 +68,7 @@ class ComprasController extends Controller
             'productos' => $productos,
         ]);
     }
-
-    /**
-     * Creates a new Compras model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
+    
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -122,6 +102,26 @@ class ComprasController extends Controller
                 $compraProducto->fc = date('Y-m-d H:i:s');
                 $compraProducto->uc = $_SESSION['usuario_sesion']['usuarios_id'];
 
+                // Consultar información del producto
+                $producto = Productos::findOne(["producto_id" => $value['producto_'.$key]]);
+
+                // Recalcular el precio de venta
+                // Calcular el nuevo precio de compra promedio
+                $stockActual = $producto->producto_stock;
+                $precioCompraActual = $producto->producto_preciocompra;
+                $cantidadNueva = $value['cantidad_'.$key];
+                $precioCompraNuevo = $value['vlr_final_'.$key] / $value['cantidad_'.$key];
+
+                $totalValorActual = $stockActual * $precioCompraActual;
+
+                $nuevoStock = $stockActual + $cantidadNueva;
+                $nuevoPrecioCompraPromedio = round(($totalValorActual + $value['vlr_final_'.$key]) / $nuevoStock, 0);
+                
+                $producto->producto_preciocompra = $nuevoPrecioCompraPromedio;
+                $producto->producto_stock = $nuevoStock; 
+
+                $producto->save();
+
                 $compraProducto->save();
             }
 
@@ -136,14 +136,7 @@ class ComprasController extends Controller
             'model' => $model,
         ]);
     }
-
-    /**
-     * Updates an existing Compras model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $compra_id Compra ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    
     public function actionUpdate($compra_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -161,6 +154,32 @@ class ComprasController extends Controller
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
 
             $model->save();
+
+            // Consultar los productos que se adquirieron en la compra
+            $compraProducto = ComprasProductos::find()->where(['fk_com_compras' => $compra_id])->all();
+
+            // Recorrer los productos
+            foreach ($compraProducto as $key => $value) {
+                // Consultar información del producto
+                $producto = Productos::findOne(['producto_id' => $value->fk_pro_productos]);
+
+                $stockActual = $producto->producto_stock;
+                $stockCompra = $value->comprod_cantidad;
+                $stockAnterior = $stockActual - $stockCompra;
+
+                $totalActual = $stockActual * $producto->producto_preciocompra;
+                $totalCompra = $value->comprod_vlr_final;
+                $totalAnterior = $totalActual - $totalCompra;
+
+                $precioCompraAnterior = $totalAnterior / $stockAnterior;
+
+                // Establecer nuevos valores
+                $producto->producto_preciocompra = $precioCompraAnterior;
+                $producto->producto_stock = $stockAnterior;
+
+                // Guardar los cambios
+                $producto->save();
+            }
 
             $sqlSentencia = "delete from tb_com_compras_productos where fk_com_compras = ".$compra_id.";";
             $cnxConexion = Yii::$app->db;
@@ -180,6 +199,24 @@ class ComprasController extends Controller
                 $compraProducto->comprod_entregado = 0;
                 $compraProducto->fc = date('Y-m-d H:i:s');
                 $compraProducto->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+
+                // Consultar información del producto
+                $producto = Productos::findOne(["producto_id" => $value['producto_'.$key]]);
+
+                $stockActual = $producto->producto_stock;
+                $precioCompraActual = $producto->producto_preciocompra;
+                $cantidadNueva = $value['cantidad_'.$key];
+                $precioCompraNuevo = $value['vlr_final_'.$key] / $value['cantidad_'.$key];
+
+                $totalValorActual = $stockActual * $precioCompraActual;
+
+                $nuevoStock = $stockActual + $cantidadNueva;
+                $nuevoPrecioCompraPromedio = round(($totalValorActual + $value['vlr_final_'.$key]) / $nuevoStock, 0);
+                
+                $producto->producto_preciocompra = $nuevoPrecioCompraPromedio;
+                $producto->producto_stock = $nuevoStock; 
+
+                $producto->save();
 
                 $compraProducto->save();
             }
@@ -202,30 +239,52 @@ class ComprasController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Compras model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $compra_id Compra ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($compra_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
-        $this->findModel($compra_id)->delete();
+        // Consultar los productos que se adquirieron en la compra
+        $compraProducto = ComprasProductos::find()->where(['fk_com_compras' => $compra_id])->all();
 
-        return $this->redirect(['index']);
+        // Recorrer los productos
+        foreach ($compraProducto as $key => $value) {
+            // Consultar información del producto
+            $producto = Productos::findOne(['producto_id' => $value->fk_pro_productos]);
+
+            $stockActual = $producto->producto_stock;
+            $stockCompra = $value->comprod_cantidad;
+            $stockAnterior = $stockActual - $stockCompra;
+
+            $totalActual = $stockActual * $producto->producto_preciocompra;
+            $totalCompra = $value->comprod_vlr_final;
+            $totalAnterior = $totalActual - $totalCompra;
+
+            $precioCompraAnterior = $totalAnterior / $stockAnterior;
+
+            // Establecer nuevos valores
+            $producto->producto_preciocompra = $precioCompraAnterior;
+            $producto->producto_stock = $stockAnterior;
+
+            // Guardar los cambios
+            $producto->save();
+        }
+
+        // Buscar el modelo de compra
+        $model = $this->findModel($compra_id);
+        
+        // Cambiar el estado a 2 en lugar de eliminar
+        $model->fk_com_estados_compra = 2;
+        
+        // Actualizar la fecha de modificación y el usuario que modifica
+        $model->fm = date('Y-m-d H:i:s');
+        $model->um = Yii::$app->user->id;
+
+        $model->save();
+
+        return $this->redirect(['view', 'compra_id' => $model->compra_id]);
     }
 
-    /**
-     * Finds the Compras model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $compra_id Compra ID
-     * @return Compras the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($compra_id)
     {
         if (($model = Compras::findOne(['compra_id' => $compra_id])) !== null) {
@@ -233,28 +292,5 @@ class ComprasController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    public function actionEnviarCompra($compra_id)
-    {
-        $compra = Compras::find()->where(['compra_id'=>$compra_id])->all()[0];
-
-        $compra->fk_com_estados_compra = 2; // Estado de la compra: 2 - Enviado al proveedor
-        $compra->fm = date('Y-m-d H:i:s');
-        $compra->um = $_SESSION['usuario_sesion']['usuarios_id'];
-
-        // Consultar proveedor
-        $proveedor = Proveedores::findOne(['proveedor_id' => $compra->fk_pro_proveedores]);
-
-        $compra->save();
-
-        Yii::$app->mailer->compose()
-            ->setFrom('info@upvendor.com')
-            ->setTo($proveedor->proveedor_correo)
-            ->setSubject('UPVENDOR - Orden de Compra #'.$compra->compra_id)
-            ->setHtmlBody('<b>Se recibió una nueva orden de compra</b>')
-            ->send();
-
-        return $this->redirect(['view', 'compra_id' => $compra->compra_id]);
     }
 }

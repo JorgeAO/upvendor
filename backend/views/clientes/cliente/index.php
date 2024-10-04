@@ -43,9 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter'=>ArrayHelper::map(TipoIdentificacion::find()->asArray()->all(), 'tipoiden_id', 'tipoiden_descripcion'),
             ],
             'cliente_identificacion',
-            'cliente_nombre',
-            'cliente_apellido',
-            'cliente_razonsocial',
+            'cliente_nombre_completo',
             'cliente_celular',
             'cliente_correo',
             [

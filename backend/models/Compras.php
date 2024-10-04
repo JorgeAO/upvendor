@@ -4,34 +4,13 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "tb_com_compras".
- *
- * @property int $compra_id
- * @property int $fk_pro_proveedores
- * @property string $compra_fecha_compra
- * @property string|null $compra_fecha_confirmacion
- * @property string $compra_fecha_cierre
- * @property string|null $compra_fecha_anulacion
- * @property int $fk_com_estados_compra
- * @property string $fc
- * @property int $uc
- * @property string|null $fm
- * @property int|null $um
- */
 class Compras extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'tb_com_compras';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -41,9 +20,6 @@ class Compras extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [

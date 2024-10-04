@@ -4,21 +4,16 @@ namespace backend\controllers;
 
 use app\models\Impuestos;
 use app\models\ImpuestosSearch;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * ImpuestosController implements the CRUD actions for Impuestos model.
- */
 class ImpuestosController extends Controller
 {
     private $strRuta = "/productos/impuestos/";
     private $intOpcion = 4002;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -34,11 +29,6 @@ class ImpuestosController extends Controller
         );
     }
 
-    /**
-     * Lists all Impuestos models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -53,12 +43,6 @@ class ImpuestosController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Impuestos model.
-     * @param int $impuesto_id Código
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($impuesto_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -69,11 +53,6 @@ class ImpuestosController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Impuestos model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -81,10 +60,13 @@ class ImpuestosController extends Controller
 
         $model = new Impuestos();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'impuesto_id' => $model->impuesto_id]);
-            }
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->impuesto_descripcion = mb_strtoupper($model->impuesto_descripcion, 'UTF-8');
+            $model->fc = date('Y-m-d H:i:s');
+            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->save();
+
+            return $this->redirect(['view', 'impuesto_id' => $model->impuesto_id]);
         } else {
             $model->loadDefaultValues();
         }
@@ -94,13 +76,6 @@ class ImpuestosController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Impuestos model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $impuesto_id Código
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($impuesto_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -108,7 +83,12 @@ class ImpuestosController extends Controller
 
         $model = $this->findModel($impuesto_id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->impuesto_descripcion = mb_strtoupper($model->impuesto_descripcion, 'UTF-8');
+            $model->fm = date('Y-m-d H:i:s');
+            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+
+            $model->save();
             return $this->redirect(['view', 'impuesto_id' => $model->impuesto_id]);
         }
 
@@ -117,13 +97,6 @@ class ImpuestosController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Impuestos model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $impuesto_id Código
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($impuesto_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -134,13 +107,6 @@ class ImpuestosController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Impuestos model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $impuesto_id Código
-     * @return Impuestos the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($impuesto_id)
     {
         if (($model = Impuestos::findOne(['impuesto_id' => $impuesto_id])) !== null) {
@@ -148,5 +114,15 @@ class ImpuestosController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionCalcular()
+    {
+        $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
+        if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
+
+        $model = $this->findModel(Yii::$app->request->post()['impuesto_id']);
+        
+        echo json_encode($model->impuesto_porcentaje);
     }
 }

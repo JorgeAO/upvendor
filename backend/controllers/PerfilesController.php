@@ -4,21 +4,15 @@ namespace backend\controllers;
 
 use app\models\Perfiles;
 use app\models\PerfilesSearch;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * PerfilesController implements the CRUD actions for Perfiles model.
- */
 class PerfilesController extends Controller
 {
     private $strRuta = "/seguridad/perfiles/";
     private $intOpcion = 1001;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -34,11 +28,6 @@ class PerfilesController extends Controller
         );
     }
 
-    /**
-     * Lists all Perfiles models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -53,12 +42,6 @@ class PerfilesController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Perfiles model.
-     * @param int $perfiles_id Código
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($perfiles_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -69,11 +52,6 @@ class PerfilesController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Perfiles model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -82,7 +60,11 @@ class PerfilesController extends Controller
         $model = new Perfiles();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load($this->request->post())) {
+                $model->perfiles_descripcion = mb_strtoupper($model->perfiles_descripcion, 'UTF-8');
+                $model->fc = date('Y-m-d H:i:s');
+                $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                $model->save();
                 return $this->redirect(['view', 'perfiles_id' => $model->perfiles_id]);
             }
         } else {
@@ -94,13 +76,6 @@ class PerfilesController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Perfiles model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $perfiles_id Código
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($perfiles_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -108,7 +83,13 @@ class PerfilesController extends Controller
 
         $model = $this->findModel($perfiles_id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post()))  {
+            $model->perfiles_descripcion = mb_strtoupper($model->perfiles_descripcion, 'UTF-8');
+            $model->fm = date('Y-m-d H:i:s');
+            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+
+            $model->save();
+            
             return $this->redirect(['view', 'perfiles_id' => $model->perfiles_id]);
         }
 

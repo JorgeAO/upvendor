@@ -11,9 +11,6 @@ class CambioClave extends yii\db\ActiveRecord
     public $usuarios_nuevaclave;
     public $usuarios_repnuevaclave;
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [

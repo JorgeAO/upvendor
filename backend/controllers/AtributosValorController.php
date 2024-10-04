@@ -9,17 +9,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * AtributosValorController implements the CRUD actions for AtributosValor model.
- */
 class AtributosValorController extends Controller
 {
     private $strRuta = "/productos/atributosValor/";
     private $intOpcion = 4006;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -35,11 +29,6 @@ class AtributosValorController extends Controller
         );
     }
 
-    /**
-     * Lists all AtributosValor models.
-     *
-     * @return string
-     */
     public function actionIndex($atributo_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -56,12 +45,6 @@ class AtributosValorController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single AtributosValor model.
-     * @param int $atrivalor_id Atrivalor ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($atrivalor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -72,11 +55,6 @@ class AtributosValorController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new AtributosValor model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate($atributo_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -86,6 +64,7 @@ class AtributosValorController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->atrivalor_valor = mb_strtoupper($model->atrivalor_valor, 'UTF-8');
             $model->fk_pro_atributos = $atributo_id;
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
@@ -106,13 +85,6 @@ class AtributosValorController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing AtributosValor model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $atrivalor_id Atrivalor ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($atrivalor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -122,6 +94,7 @@ class AtributosValorController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->atrivalor_valor = mb_strtoupper($model->atrivalor_valor, 'UTF-8');
             $model->fm = date('Y-m-d H:i:s');
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
             
@@ -134,13 +107,6 @@ class AtributosValorController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing AtributosValor model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $atrivalor_id Atrivalor ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($atrivalor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -151,13 +117,6 @@ class AtributosValorController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the AtributosValor model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $atrivalor_id Atrivalor ID
-     * @return AtributosValor the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($atrivalor_id)
     {
         if (($model = AtributosValor::findOne(['atrivalor_id' => $atrivalor_id])) !== null) {

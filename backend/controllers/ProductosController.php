@@ -10,17 +10,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * ProductosController implements the CRUD actions for Productos model.
- */
 class ProductosController extends Controller
 {
     private $strRuta = "/productos/productos/";
     private $intOpcion = 4004;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -35,12 +29,7 @@ class ProductosController extends Controller
             ]
         );
     }
-
-    /**
-     * Lists all Productos models.
-     *
-     * @return string
-     */
+    
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -54,42 +43,31 @@ class ProductosController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
-    /**
-     * Displays a single Productos model.
-     * @param int $producto_id Producto ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    
     public function actionView($producto_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
-        $sqlSentencia = "select 
-            pa.*,
-            atr.atributo_descripcion,
-            av.atrivalor_valor
-            from tb_pro_productos_atributos pa
-            join tb_pro_atributos atr on (atr.atributo_id = pa.fk_pro_atributos)
-            join tb_pro_atributos_valor av on (pa.fk_pro_atributos_valor = av.atrivalor_id)
-            where pa.fk_pro_productos = ".$producto_id.";";
-
-        $cnxConexion = Yii::$app->db;
-        $stmtSentencia = $cnxConexion->createCommand($sqlSentencia);
-        $atributos = $stmtSentencia->queryAll();
+        // Consulta al modelo ProductosAtributos
+        $atributos = ProductosAtributos::find()
+            ->select([
+                'pa.*',
+                'atr.atributo_descripcion',
+                'av.atrivalor_valor'
+            ])
+            ->from(['pa' => ProductosAtributos::tableName()])
+            ->join('JOIN', ['atr' => 'tb_pro_atributos'], 'atr.atributo_id = pa.fk_pro_atributos')
+            ->join('JOIN', ['av' => 'tb_pro_atributos_valor'], 'pa.fk_pro_atributos_valor = av.atrivalor_id')
+            ->where(['pa.fk_pro_productos' => $producto_id])
+            ->all();
         
         return $this->render($this->strRuta.'view', [
             'model' => $this->findModel($producto_id),
             'atributos' => $atributos
         ]);
     }
-
-    /**
-     * Creates a new Productos model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
+    
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -99,21 +77,27 @@ class ProductosController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->producto_nombre = mb_strtoupper($model->producto_nombre);
+            $model->producto_descripcion = mb_strtoupper($model->producto_descripcion);
+            $model->producto_referencia = mb_strtoupper($model->producto_referencia);
+            $model->productos_precio_con_imp = 1;
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
 
             $model->save();
 
-            foreach ($this->request->post()['atributos'] as $key => $value)
-            {
-                $productoAtributo = new ProductosAtributos();
-                $productoAtributo->fk_pro_productos = $model->producto_id;
-                $productoAtributo->fk_pro_atributos = $value['atributo_'.$key];
-                $productoAtributo->fk_pro_atributos_valor = $value['atrivalor_'.$key];
-                $productoAtributo->fc = date('Y-m-d H:i:s');;
-                $productoAtributo->uc = $_SESSION['usuario_sesion']['usuarios_id'];
-
-                $productoAtributo->save();
+            if (isset($this->request->post()["atributos"])) {
+                foreach ($this->request->post()['atributos'] as $key => $value)
+                {
+                    $productoAtributo = new ProductosAtributos();
+                    $productoAtributo->fk_pro_productos = $model->producto_id;
+                    $productoAtributo->fk_pro_atributos = $value['atributo_'.$key];
+                    $productoAtributo->fk_pro_atributos_valor = $value['atrivalor_'.$key];
+                    $productoAtributo->fc = date('Y-m-d H:i:s');;
+                    $productoAtributo->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+    
+                    $productoAtributo->save();
+                }
             }
             
             return $this->redirect(['view', 'producto_id' => $model->producto_id]);
@@ -127,14 +111,7 @@ class ProductosController extends Controller
             'model' => $model,
         ]);
     }
-
-    /**
-     * Updates an existing Productos model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $producto_id Producto ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    
     public function actionUpdate($producto_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -144,6 +121,9 @@ class ProductosController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->producto_nombre = mb_strtoupper($model->producto_nombre);
+            $model->producto_descripcion = mb_strtoupper($model->producto_descripcion);
+            $model->producto_referencia = mb_strtoupper($model->producto_referencia);
             $model->fm = date('Y-m-d H:i:s');
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
 
@@ -153,48 +133,44 @@ class ProductosController extends Controller
             $cnxConexion = Yii::$app->db;
             $stmtSentencia = $cnxConexion->createCommand($sqlSentencia);
             $atributos = $stmtSentencia->queryAll();
+            
 
-            foreach ($this->request->post()['atributos'] as $key => $value)
-            {
-                $productoAtributo = new ProductosAtributos();
-                $productoAtributo->fk_pro_productos = $model->producto_id;
-                $productoAtributo->fk_pro_atributos = $value['atributo_'.$key];
-                $productoAtributo->fk_pro_atributos_valor = $value['atrivalor_'.$key];
-                $productoAtributo->fc = date('Y-m-d H:i:s');;
-                $productoAtributo->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            if (isset($this->request->post()["atributos"])) {
+                foreach ($this->request->post()['atributos'] as $key => $value)
+                {
+                    $productoAtributo = new ProductosAtributos();
+                    $productoAtributo->fk_pro_productos = $model->producto_id;
+                    $productoAtributo->fk_pro_atributos = $value['atributo_'.$key];
+                    $productoAtributo->fk_pro_atributos_valor = $value['atrivalor_'.$key];
+                    $productoAtributo->fc = date('Y-m-d H:i:s');;
+                    $productoAtributo->uc = $_SESSION['usuario_sesion']['usuarios_id'];
 
-                $productoAtributo->save();
+                    $productoAtributo->save();
+                }
             }
             
             return $this->redirect(['view', 'producto_id' => $model->producto_id]);
         }
 
-        $sqlSentencia = "select 
-            pa.*,
-            atr.atributo_descripcion,
-            av.atrivalor_valor
-            from tb_pro_productos_atributos pa
-            join tb_pro_atributos atr on (atr.atributo_id = pa.fk_pro_atributos)
-            join tb_pro_atributos_valor av on (pa.fk_pro_atributos_valor = av.atrivalor_id)
-            where pa.fk_pro_productos = ".$producto_id.";";
-
-        $cnxConexion = Yii::$app->db;
-        $stmtSentencia = $cnxConexion->createCommand($sqlSentencia);
-        $atributos = $stmtSentencia->queryAll();
+        // Consulta al modelo ProductosAtributos
+        $atributos = ProductosAtributos::find()
+            ->select([
+                'pa.*',
+                'atr.atributo_descripcion',
+                'av.atrivalor_valor'
+            ])
+            ->from(['pa' => ProductosAtributos::tableName()])
+            ->join('JOIN', ['atr' => 'tb_pro_atributos'], 'atr.atributo_id = pa.fk_pro_atributos')
+            ->join('JOIN', ['av' => 'tb_pro_atributos_valor'], 'pa.fk_pro_atributos_valor = av.atrivalor_id')
+            ->where(['pa.fk_pro_productos' => $producto_id])
+            ->all();
 
         return $this->render($this->strRuta.'update', [
             'model' => $model,
             'atributos' => $atributos,
         ]);
     }
-
-    /**
-     * Deletes an existing Productos model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $producto_id Producto ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    
     public function actionDelete($producto_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -204,14 +180,7 @@ class ProductosController extends Controller
 
         return $this->redirect(['index']);
     }
-
-    /**
-     * Finds the Productos model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $producto_id Producto ID
-     * @return Productos the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    
     protected function findModel($producto_id)
     {
         if (($model = Productos::findOne(['producto_id' => $producto_id])) !== null) {
@@ -254,4 +223,16 @@ class ProductosController extends Controller
         
         echo json_encode($resultado);
     }
+
+    public function actionObtenerPrecioVenta()
+    {
+        $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
+        if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
+
+        $producto_id = Yii::$app->request->post()['producto_id'];
+        $producto = Productos::findOne($producto_id);
+
+        echo json_encode($producto->producto_precioventa);
+    }
+        
 }

@@ -12,11 +12,14 @@ Icon::map($this);
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'tipoiden_descripcion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'tipoiden_descripcion')->textInput(['maxlength' => true, 'class' => 'form-control form-control-sm']) ?>
     
     <?php 
         if (isset($model->tipoiden_id))
-            echo $form->field($model, 'fk_par_estados')->dropDownList(ArrayHelper::map(Estados::find()->asArray()->all(), 'estados_id', 'estados_descripcion'));
+            echo $form->field($model, 'fk_par_estados')->dropDownList(
+                ArrayHelper::map(Estados::find()->asArray()->all(), 'estados_id', 'estados_descripcion'), 
+                ['class' => 'form-control form-control-sm']
+            );
     ?>
 
     <div class="form-group">

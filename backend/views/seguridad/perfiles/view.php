@@ -11,14 +11,9 @@ $this->title = $model->perfiles_id.' - '.$model->perfiles_descripcion;
 $this->params['breadcrumbs'][] = ['label' => 'Perfiles', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-\yii\web\YiiAsset::register($this);
-
 ?>
-
 <div class="perfiles-view">
-
     <h4><?= Html::encode($this->title) ?></h4>
-
     <p>
         <?= Html::a(Icon::show('arrow-left').' Volver', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
         <?= Html::a(Icon::show('plus').' Agregar', ['create'], ['class' => 'btn btn-azul btn-sm']) ?>
@@ -31,24 +26,27 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'options' => ['class' => 'table table-striped table-hover table-sm'],
-        'attributes' => [
-            'perfiles_id',
-            'perfiles_descripcion',
-            [
-                'label'=>'Estado',
-                'value'=>function($data){
-                    return Estados::find()->where(['estados_id'=>$data->fk_par_estados])->all()[0]->estados_descripcion;
-                }
-            ],
-            'fc',
-            'uc',
-            'fm',
-            'um',
-        ],
-    ]) ?>
-
+    <div class="row">
+        <div class="col-sm-6">
+            <?= DetailView::widget([
+                'model' => $model,
+                'options' => ['class' => 'table table-striped table-hover table-sm'],
+                'attributes' => [
+                    'perfiles_id',
+                    'perfiles_descripcion',
+                    [
+                        'label'=>'Estado',
+                        'value'=>function($data){
+                            return Estados::find()->where(['estados_id'=>$data->fk_par_estados])->all()[0]->estados_descripcion;
+                        }
+                    ],
+                    'fc',
+                    'uc',
+                    'fm',
+                    'um',
+                ],
+                ]) ?>
+            </div>
+        </div>
+    </div>
 </div>

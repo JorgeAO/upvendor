@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
 
 Icon::map($this);
 
-$this->title = $model->cliente_id.' - '.($model->fk_par_tipo_persona == 1 ? $model->cliente_nombre.' '.$model->cliente_apellido : $model->cliente_razonsocial);
+$this->title = $model->cliente_id.' - '.$model->cliente_nombre_completo;
 $this->params['breadcrumbs'][] = ['label' => 'Cliente', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -52,18 +52,23 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'cliente_identificacion',
                     [
-                        'label'=>'Nombre',
-                        'value'=>$model->cliente_nombre,
+                        'label'=>'Primer Nombre',
+                        'value'=>$model->cliente_primer_nombre,
                         'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
                     ],
                     [
-                        'label'=>'Apellido',
-                        'value'=>$model->cliente_apellido,
+                        'label'=>'Segundo Nombre',
+                        'value'=>$model->cliente_segundo_nombre,
                         'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
                     ],
                     [
-                        'label'=>'Fecha de Nacimiento',
-                        'value'=>$model->cliente_fnacimiento,
+                        'label'=>'Primer Apellido',
+                        'value'=>$model->cliente_primer_apellido,
+                        'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
+                    ],
+                    [
+                        'label'=>'Segundo Apellido',
+                        'value'=>$model->cliente_segundo_apellido,
                         'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
                     ],
                     [
@@ -71,8 +76,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value'=>$model->cliente_razonsocial,
                         'visible'=> $model->fk_par_tipo_persona == 2 ? '1' : '0',
                     ],
+                    'cliente_nombre_completo',
+                    [
+                        'label'=>'Fecha de Nacimiento',
+                        'value'=>$model->cliente_fnacimiento ? date('Y-m-d', strtotime($model->cliente_fnacimiento . ' +5 hours')) : null,
+                        'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
+                    ],
                     'cliente_celular',
                     'cliente_correo',
+                    'cliente_direccion',
+                    'cliente_barrio',
                     'cliente_maxdiasmora',
                     [
                         'label'=>'Acepta Tto. de Datos',

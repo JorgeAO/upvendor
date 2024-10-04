@@ -107,7 +107,8 @@ class PermisosController extends Controller
             join tb_seg_modulos modu on (opci.fk_seg_modulos = modu.modulos_id) 
             left join tb_seg_permisos perm on (perm.fk_seg_opciones = opci.opciones_id and perm.fk_seg_perfiles = ".$intPerfil.")
             where modu.fk_par_estados = 1
-            and opci.fk_par_estados = 1";
+            and opci.fk_par_estados = 1
+            order by opci.opciones_id asc";
         
         $cnxConexion = Yii::$app->db;
 
@@ -210,7 +211,8 @@ class PermisosController extends Controller
                 [
                     'label'=>$value['opciones_nombre'], 
                     'options' => [
-                        'class' => 'text-white'
+                        'class' => 'text-white',
+                        'style'=>'font-size:12px'
                     ],
                     'url'=>[
                         $value['opciones_enlace'], 

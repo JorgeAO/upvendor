@@ -4,31 +4,13 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "tb_pro_atributos_valor".
- *
- * @property int $atrivalor_id
- * @property int $fk_pro_atributos
- * @property string $atrivalor_valor
- * @property int $fk_par_estados
- * @property string $fc
- * @property int $uc
- * @property string|null $fm
- * @property int|null $um
- */
 class AtributosValor extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'tb_pro_atributos_valor';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -39,9 +21,6 @@ class AtributosValor extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [

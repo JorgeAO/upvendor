@@ -4,21 +4,15 @@ namespace backend\controllers;
 
 use app\models\Categoria;
 use app\models\CategoriaSearch;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * CategoriaController implements the CRUD actions for Categoria model.
- */
 class CategoriaController extends Controller
 {
     private $strRuta = "/productos/categoria/";
     private $intOpcion = 4001;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -34,11 +28,6 @@ class CategoriaController extends Controller
         );
     }
 
-    /**
-     * Lists all Categoria models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -53,12 +42,6 @@ class CategoriaController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Categoria model.
-     * @param int $categoria_id Categoria ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($categoria_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -69,11 +52,6 @@ class CategoriaController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Categoria model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -83,6 +61,7 @@ class CategoriaController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->categoria_descripcion = mb_strtoupper($model->categoria_descripcion);
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
 
@@ -98,13 +77,6 @@ class CategoriaController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Categoria model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $categoria_id Categoria ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($categoria_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -114,6 +86,7 @@ class CategoriaController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->categoria_descripcion = mb_strtoupper($model->categoria_descripcion);
             $model->fm = date('Y-m-d H:i:s');
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
             
@@ -126,13 +99,6 @@ class CategoriaController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Categoria model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $categoria_id Categoria ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($categoria_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -143,19 +109,12 @@ class CategoriaController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Categoria model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $categoria_id Categoria ID
-     * @return Categoria the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($categoria_id)
     {
         if (($model = Categoria::findOne(['categoria_id' => $categoria_id])) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('La página solicitada no existe.');
     }
 }

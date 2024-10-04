@@ -6,38 +6,22 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Cliente;
 
-/**
- * ClienteSearch represents the model behind the search form of `app\models\Cliente`.
- */
 class ClienteSearch extends Cliente
 {
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
             [['cliente_id', 'fk_par_tipo_persona', 'fk_par_tipo_identificacion', 'cliente_maxdiasmora', 'fk_par_estados', 'uc', 'um'], 'integer'],
-            [['cliente_identificacion', 'cliente_nombre', 'cliente_apellido', 'cliente_razonsocial', 'cliente_celular', 'cliente_correo', 'cliente_ttodatos', 'cliente_fttodatos', 'cliente_fnacimiento', 'cliente_pubcorreo', 'fc', 'fm'], 'safe'],
+            [['cliente_identificacion', 'cliente_nombre_completo', 'cliente_celular', 'cliente_correo', 'cliente_ttodatos', 'cliente_fttodatos', 'cliente_fnacimiento', 'cliente_pubcorreo', 'fc', 'fm'], 'safe'],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
         $query = Cliente::find();
@@ -72,9 +56,7 @@ class ClienteSearch extends Cliente
         ]);
 
         $query->andFilterWhere(['like', 'cliente_identificacion', $this->cliente_identificacion])
-            ->andFilterWhere(['like', 'cliente_nombre', $this->cliente_nombre])
-            ->andFilterWhere(['like', 'cliente_apellido', $this->cliente_apellido])
-            ->andFilterWhere(['like', 'cliente_razonsocial', $this->cliente_razonsocial])
+            ->andFilterWhere(['like', 'cliente_nombre_completo', $this->cliente_nombre_completo])
             ->andFilterWhere(['like', 'cliente_celular', $this->cliente_celular])
             ->andFilterWhere(['like', 'cliente_correo', $this->cliente_correo])
             ->andFilterWhere(['like', 'cliente_ttodatos', $this->cliente_ttodatos])

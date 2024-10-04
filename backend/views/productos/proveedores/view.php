@@ -1,5 +1,6 @@
 <?php
 use app\models\Estados;
+use app\models\EstadosCompra;
 use app\models\TipoIdentificacion;
 use app\models\TipoPersona;
 use kartik\icons\Icon;
@@ -14,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="proveedores-view">
+<div class="proveedores-view mb-3">
 
     <h4><?= Html::encode($this->title) ?></h4>
 
@@ -53,17 +54,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     'proveedor_identificacion',
                     [
                         'label'=>'Nombre',
-                        'value'=>$model->proveedor_nombre,
+                        'value'=>$model->proveedor_primer_nombre,
                         'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
                     ],
                     [
-                        'label'=>'Apellido',
-                        'value'=>$model->proveedor_apellido,
+                        'label'=>'Segundo Nombre',
+                        'value'=>$model->proveedor_segundo_nombre,
                         'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
                     ],
                     [
-                        'label'=>'Fecha de Nacimiento',
-                        'value'=>$model->proveedor_fnacimiento,
+                        'label'=>'Primer Apellido',
+                        'value'=>$model->proveedor_primer_apellido,
+                        'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
+                    ],
+                    [
+                        'label'=>'Segundo Apellido',
+                        'value'=>$model->proveedor_segundo_apellido,
                         'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
                     ],
                     [
@@ -71,8 +77,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value'=>$model->proveedor_razonsocial,
                         'visible'=> $model->fk_par_tipo_persona == 2 ? '1' : '0',
                     ],
+                    [
+                        'label'=>'Nombre Completo',
+                        'value'=>$model->proveedor_nombrecompleto,
+                    ],
+                    [
+                        'label'=>'Fecha de Nacimiento',
+                        'value'=>$model->proveedor_fnacimiento ? date('Y-m-d', strtotime($model->proveedor_fnacimiento . ' +5 hours')) : null,
+                        'visible'=> $model->fk_par_tipo_persona == 1 ? '1' : '0',
+                    ],
                     'proveedor_celular',
                     'proveedor_correo',
+                    'proveedor_direccion',
+                    'proveedor_barrio',
                     [
                         'label'=>'Acepta Tto. de Datos',
                         'value'=>$model->proveedor_ttodatos == 1 ? 'Si' : 'No',
@@ -98,7 +115,36 @@ $this->params['breadcrumbs'][] = $this->title;
                     Últimas 5 Compras
                 </div>
                 <div class="card-body">
-                    [tabla]
+                <?php if (!empty($ultimasCompras)): ?>
+                    <table class="table table-sm table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Compra</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($ultimasCompras as $compra): ?>
+                                <tr>
+                                    <td><?= $compra->compra_id ?></td>
+                                    <td><?= Yii::$app->formatter->asDate($compra->compra_fecha_compra, 'php:Y-m-d') ?></td>
+                                    <td><?= 
+                                        EstadosCompra::findOne($compra->fk_com_estados_compra)->compesta_descripcion == 'Anulada' ?
+                                            '<span class="badge badge-danger">Anulada</span>' :
+                                            '<span class="badge badge-success">'.EstadosCompra::findOne($compra->fk_com_estados_compra)->compesta_descripcion.'</span>'
+                                    ?></td>
+                                    <td>
+                                        <?= Html::a(Icon::show('eye'), ['compras/view', 'compra_id' => $compra->compra_id], ['class' => 'btn btn-sm btn-azul', 'title' => 'Ver detalle']) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <p>No hay compras recientes para este proveedor.</p>
+                <?php endif; ?>
                 </div>
             </div>
             <div class="card mt-3">

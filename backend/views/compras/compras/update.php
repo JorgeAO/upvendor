@@ -8,9 +8,7 @@ $this->params['breadcrumbs'][] = ['label' => $model->compra_id, 'url' => ['view'
 $this->params['breadcrumbs'][] = 'Editar';
 ?>
 <div class="compras-update">
-
     <h4><?= Html::encode($this->title) ?></h4>
-
     <?= $this->render('_form', [
         'model' => $model,
         'compraProductos' => $compraProductos,

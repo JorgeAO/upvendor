@@ -81,8 +81,8 @@ class MarcasController extends Controller
 
         $model = new Marcas();
 
-        if ($this->request->isPost && $model->load($this->request->post()))
-        {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->marca_descripcion = mb_strtoupper($model->marca_descripcion, 'UTF-8');
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
 
@@ -114,6 +114,7 @@ class MarcasController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->marca_descripcion = mb_strtoupper($model->marca_descripcion, 'UTF-8');
             $model->fm = date('Y-m-d H:i:s');
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
             

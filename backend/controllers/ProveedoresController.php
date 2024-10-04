@@ -9,17 +9,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * ProveedoresController implements the CRUD actions for Proveedores model.
- */
 class ProveedoresController extends Controller
 {
     private $strRuta = "/productos/proveedores/";
     private $intOpcion = 4003;
-
-    /**
-     * @inheritDoc
-     */
+    
     public function behaviors()
     {
         return array_merge(
@@ -34,12 +28,7 @@ class ProveedoresController extends Controller
             ]
         );
     }
-
-    /**
-     * Lists all Proveedores models.
-     *
-     * @return string
-     */
+    
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -53,28 +42,25 @@ class ProveedoresController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
-    /**
-     * Displays a single Proveedores model.
-     * @param int $proveedor_id Proveedor ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    
     public function actionView($proveedor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
+        // Consultar las últimas 5 compras al proveedor de manera descendente
+        $ultimasCompras = \app\models\Compras::find()
+            ->where(['fk_pro_proveedores' => $proveedor_id])
+            ->orderBy(['compra_fecha_compra' => SORT_DESC])
+            ->limit(5)
+            ->all();
+
         return $this->render($this->strRuta.'view', [
             'model' => $this->findModel($proveedor_id),
+            'ultimasCompras' => $ultimasCompras,
         ]);
     }
 
-    /**
-     * Creates a new Proveedores model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -179,6 +165,9 @@ class ProveedoresController extends Controller
                 $model->proveedor_apellido = '';
                 $model->proveedor_fnacimiento = '';
             }
+
+            $model->proveedor_direccion = mb_strtoupper($model->proveedor_direccion);
+            $model->proveedor_barrio = mb_strtoupper($model->proveedor_barrio);
             $model->proveedor_fttodatos = date('Y-m-d H:i:s');
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
@@ -197,13 +186,6 @@ class ProveedoresController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Proveedores model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $proveedor_id Proveedor ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($proveedor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -282,14 +264,31 @@ class ProveedoresController extends Controller
 
             if ($model->fk_par_tipo_persona == 1) 
             {
-                $model->proveedor_nombrecompleto = $model->proveedor_nombre.' '.$model->proveedor_apellido;
+                $model->proveedor_primer_nombre = mb_strtoupper($model->proveedor_nombre);
+                $model->proveedor_segundo_nombre = mb_strtoupper($model->proveedor_nombre);
+                $model->proveedor_primer_apellido = mb_strtoupper($model->proveedor_apellido);
+                $model->proveedor_segundo_apellido = mb_strtoupper($model->proveedor_apellido);
+
+                $model->proveedor_nombrecompleto = $model->proveedor_primer_nombre.' '.$model->proveedor_segundo_nombre.' '.$model->proveedor_primer_apellido.' '.$model->proveedor_segundo_apellido;
+                
+                // Si la fecha de nacimiento está definida, súmale 5 horas
+                if (!empty($model->proveedor_fnacimiento)) {
+                    $fechaNacimiento = new \DateTime($model->proveedor_fnacimiento);
+                    $fechaNacimiento->add(new \DateInterval('PT5H'));
+                    $model->proveedor_fnacimiento = $fechaNacimiento->format('Y-m-d H:i:s');
+                }
+
                 $model->proveedor_razonsocial = '';
             }
             if ($model->fk_par_tipo_persona == 2) 
             {
+                $model->proveedor_razonsocial = mb_strtoupper($model->proveedor_razonsocial);
                 $model->proveedor_nombrecompleto = $model->proveedor_razonsocial;
-                $model->proveedor_nombre = '';
-                $model->proveedor_apellido = '';
+
+                $model->proveedor_primer_nombre = '';
+                $model->proveedor_segundo_nombre = '';
+                $model->proveedor_primer_apellido = '';
+                $model->proveedor_segundo_apellido = '';
                 $model->proveedor_fnacimiento = '';
             }
 
@@ -307,6 +306,8 @@ class ProveedoresController extends Controller
                 );
             }
 
+            $model->proveedor_direccion = mb_strtoupper($model->proveedor_direccion);
+            $model->proveedor_barrio = mb_strtoupper($model->proveedor_barrio);
             $model->fm = date('Y-m-d H:i:s');
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
             
@@ -319,13 +320,6 @@ class ProveedoresController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Proveedores model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $proveedor_id Proveedor ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($proveedor_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -336,13 +330,6 @@ class ProveedoresController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Proveedores model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $proveedor_id Proveedor ID
-     * @return Proveedores the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($proveedor_id)
     {
         if (($model = Proveedores::findOne(['proveedor_id' => $proveedor_id])) !== null) {

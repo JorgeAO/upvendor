@@ -5,21 +5,15 @@ namespace backend\controllers;
 use app\models\Cliente;
 use app\models\ClienteSearch;
 use stdClass;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * ClienteController implements the CRUD actions for Cliente model.
- */
 class ClienteController extends Controller
 {
     private $strRuta = "/clientes/cliente/";
     private $intOpcion = 3001;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -35,11 +29,6 @@ class ClienteController extends Controller
         );
     }
 
-    /**
-     * Lists all Cliente models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -54,12 +43,6 @@ class ClienteController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Cliente model.
-     * @param int $cliente_id Cliente ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($cliente_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -70,11 +53,6 @@ class ClienteController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Cliente model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -107,7 +85,7 @@ class ClienteController extends Controller
             // Validar, si es persona natural que tenga nombre y apellido
             if ($model->fk_par_tipo_persona == 1)
             {
-                if ($model->cliente_nombre == '' || $model->cliente_apellido == '') 
+                if ($model->cliente_primer_nombre == '' || $model->cliente_primer_apellido == '') 
                 {
                     return $this->render(
                         $this->strRuta.'create', 
@@ -153,15 +131,40 @@ class ClienteController extends Controller
                 );
             }
 
-            if ($model->fk_par_tipo_persona == 1) 
-            {
+            // Si es persona natural, no debe tener razón social
+            if ($model->fk_par_tipo_persona == 1) {
                 $model->cliente_razonsocial = '';
+                
+                $model->cliente_primer_nombre = mb_strtoupper($model->cliente_primer_nombre);
+                $model->cliente_segundo_nombre = mb_strtoupper($model->cliente_segundo_nombre);
+                $model->cliente_primer_apellido = mb_strtoupper($model->cliente_primer_apellido);
+                $model->cliente_segundo_apellido = mb_strtoupper($model->cliente_segundo_apellido);
+
+                $model->cliente_nombre_completo = 
+                    $model->cliente_primer_nombre . ' ' . 
+                    $model->cliente_segundo_nombre . ' ' . 
+                    $model->cliente_primer_apellido . ' ' . 
+                    $model->cliente_segundo_apellido;
+                
+                    // Si la fecha de nacimiento está definida, súmale 5 horas
+                if (!empty($model->cliente_fnacimiento)) {
+                    $fechaNacimiento = new \DateTime($model->cliente_fnacimiento);
+                    $fechaNacimiento->add(new \DateInterval('PT5H'));
+                    $model->cliente_fnacimiento = $fechaNacimiento->format('Y-m-d H:i:s');
+                }
             }
-            if ($model->fk_par_tipo_persona == 2) 
-            {
-                $model->cliente_nombre = '';
-                $model->cliente_apellido = '';
+
+            // Si es persona jurídica, no debe tener nombre y apellido
+            if ($model->fk_par_tipo_persona == 2) {
+                $model->cliente_primer_nombre = '';
+                $model->cliente_segundo_nombre = '';
+                $model->cliente_primer_apellido = '';
+                $model->cliente_segundo_apellido = '';
                 $model->cliente_fnacimiento = '';
+                
+                $model->cliente_razonsocial = mb_strtoupper($model->cliente_razonsocial);
+
+                $model->cliente_nombre_completo = $model->cliente_razonsocial;
             }
 
             if ($model->cliente_ttodatos == 0)
@@ -177,7 +180,9 @@ class ClienteController extends Controller
                     ]
                 );
             }
-
+            
+            $model->cliente_direccion = mb_strtoupper($model->cliente_direccion);
+            $model->cliente_barrio = mb_strtoupper($model->cliente_barrio);
             $model->cliente_fttodatos = date('Y-m-d H:i:s');
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
@@ -196,13 +201,6 @@ class ClienteController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Cliente model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $cliente_id Cliente ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($cliente_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -219,7 +217,7 @@ class ClienteController extends Controller
             if ($model->fk_par_tipo_persona == 1 && $model->fk_par_tipo_identificacion == 2)
             {
                 return $this->render(
-                    $this->strRuta.'create', 
+                    $this->strRuta.'update', 
                     [
                         'model' => $model,
                         'data' => [
@@ -233,10 +231,10 @@ class ClienteController extends Controller
             // Validar, si es persona natural que tenga nombre y apellido
             if ($model->fk_par_tipo_persona == 1)
             {
-                if ($model->cliente_nombre == '' || $model->cliente_apellido == '') 
+                if ($model->cliente_primer_nombre == '' || $model->cliente_primer_apellido == '') 
                 {
                     return $this->render(
-                        $this->strRuta.'create', 
+                        $this->strRuta.'update', 
                         [
                             'model' => $model,
                             'data' => [
@@ -253,7 +251,7 @@ class ClienteController extends Controller
             if ($model->fk_par_tipo_persona == 2 && $model->fk_par_tipo_identificacion == 1)
             {
                 return $this->render(
-                    $this->strRuta.'create', 
+                    $this->strRuta.'update', 
                     [
                         'model' => $model,
                         'data' => [
@@ -268,7 +266,7 @@ class ClienteController extends Controller
             if ($model->fk_par_tipo_persona == 2 && $model->cliente_razonsocial == '') 
             {
                 return $this->render(
-                    $this->strRuta.'create', 
+                    $this->strRuta.'update', 
                     [
                         'model' => $model,
                         'data' => [
@@ -279,21 +277,43 @@ class ClienteController extends Controller
                 );
             }
 
-            if ($model->fk_par_tipo_persona == 1) 
-            {
+            if ($model->fk_par_tipo_persona == 1) {
                 $model->cliente_razonsocial = '';
+
+                $model->cliente_primer_nombre = mb_strtoupper($model->cliente_primer_nombre);
+                $model->cliente_segundo_nombre = mb_strtoupper($model->cliente_segundo_nombre);
+                $model->cliente_primer_apellido = mb_strtoupper($model->cliente_primer_apellido);
+                $model->cliente_segundo_apellido = mb_strtoupper($model->cliente_segundo_apellido);
+
+                $model->cliente_nombre_completo = 
+                    $model->cliente_primer_nombre . ' ' . 
+                    $model->cliente_segundo_nombre . ' ' . 
+                    $model->cliente_primer_apellido . ' ' . 
+                    $model->cliente_segundo_apellido;
+                
+                // Si la fecha de nacimiento está definida, súmale 5 horas
+                if (!empty($model->cliente_fnacimiento)) {
+                    $fechaNacimiento = new \DateTime($model->cliente_fnacimiento);
+                    $fechaNacimiento->add(new \DateInterval('PT5H'));
+                    $model->cliente_fnacimiento = $fechaNacimiento->format('Y-m-d H:i:s');
+                }
             }
-            if ($model->fk_par_tipo_persona == 2) 
-            {
-                $model->cliente_nombre = '';
-                $model->cliente_apellido = '';
+            if ($model->fk_par_tipo_persona == 2) {
+                $model->cliente_primer_nombre = '';
+                $model->cliente_segundo_nombre = '';
+                $model->cliente_primer_apellido = '';
+                $model->cliente_segundo_apellido = '';
                 $model->cliente_fnacimiento = '';
+
+                $model->cliente_razonsocial = mb_strtoupper($model->cliente_razonsocial);
+
+                $model->cliente_nombre_completo = $model->cliente_razonsocial;
             }
 
             if ($model->cliente_ttodatos == 0)
             {
                 return $this->render(
-                    $this->strRuta.'create', 
+                    $this->strRuta.'update', 
                     [
                         'model' => $model,
                         'data' => [
@@ -303,7 +323,9 @@ class ClienteController extends Controller
                     ]
                 );
             }
-
+            
+            $model->cliente_direccion = mb_strtoupper($model->cliente_direccion);
+            $model->cliente_barrio = mb_strtoupper($model->cliente_barrio);
             $model->fm = date('Y-m-d H:i:s');
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
             
@@ -316,13 +338,6 @@ class ClienteController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Cliente model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $cliente_id Cliente ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($cliente_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -333,13 +348,6 @@ class ClienteController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Cliente model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $cliente_id Cliente ID
-     * @return Cliente the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($cliente_id)
     {
         if (($model = Cliente::findOne(['cliente_id' => $cliente_id])) !== null) {

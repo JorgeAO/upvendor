@@ -4,37 +4,13 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "tb_seg_usuarios".
- *
- * @property int $usuarios_id
- * @property string $usuarios_nombre
- * @property string $usuarios_apellido
- * @property string $usuarios_telefono
- * @property string $usuarios_correo
- * @property string $usuarios_clave
- * @property string $usuarios_token
- * @property string $usuarios_vto_token
- * @property int $fk_seg_perfiles
- * @property int $fk_par_estados
- * @property string $fc
- * @property int $uc
- * @property string|null $fm
- * @property int|null $um
- */
 class Usuarios extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'tb_seg_usuarios';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -47,9 +23,6 @@ class Usuarios extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [

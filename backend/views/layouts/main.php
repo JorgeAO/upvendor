@@ -16,14 +16,14 @@ $arrMenu = PermisosController::construirMenu();
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="h-100">
-    <head>
+    <head style="background-color: #f4f4f4;">
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <?php $this->registerCsrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
-    <body class="d-flex flex-column h-100">
+    <body class="d-flex flex-column h-100" style="background-color: #f4f4f4;">
     <?php $this->beginBody() ?>
 
     <header>
@@ -31,12 +31,11 @@ $arrMenu = PermisosController::construirMenu();
         if (isset($_SESSION['usuario_sesion']))
         {
             NavBar::begin([
-                //'brandLabel' => Yii::$app->name,
                 'brandLabel' => '<img src="logo_48x48.png"/>',
-                'brandUrl' => '/site/index',
+                'brandUrl' => '#',
                 'options' => [
                     'class' => 'navbar navbar-expand-md navbar-light fixed-top',
-                    'style' => 'background-color: white'
+                    'style' => 'background-color: #f4f4f4'
                 ],
             ]);
 
@@ -57,6 +56,12 @@ $arrMenu = PermisosController::construirMenu();
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>
 
+            <?php
+            echo '<pre>';
+            //print_r($arrMenu);
+            echo '</pre>';
+            ?>
+
             <?= Alert::widget() ?>
             <?= $content ?>
         </div>
@@ -64,6 +69,6 @@ $arrMenu = PermisosController::construirMenu();
 
     <?php $this->endBody() ?>
     </body>
-</html>
+    </html>
 
-<?php $this->endPage();?>
+    <?php $this->endPage();?>

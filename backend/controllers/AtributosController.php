@@ -10,17 +10,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * AtributosController implements the CRUD actions for Atributos model.
- */
 class AtributosController extends Controller
 {
     private $strRuta = "/productos/atributos/";
     private $intOpcion = 4005;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -30,17 +24,13 @@ class AtributosController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'listar' => ['POST'],
                     ],
                 ],
             ]
         );
     }
 
-    /**
-     * Lists all Atributos models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -55,12 +45,6 @@ class AtributosController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Atributos model.
-     * @param int $atributo_id Atributo ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($atributo_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -71,11 +55,6 @@ class AtributosController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Atributos model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -100,13 +79,6 @@ class AtributosController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Atributos model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $atributo_id Atributo ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($atributo_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -128,13 +100,6 @@ class AtributosController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Atributos model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $atributo_id Atributo ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($atributo_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -145,13 +110,6 @@ class AtributosController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Atributos model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $atributo_id Atributo ID
-     * @return Atributos the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($atributo_id)
     {
         if (($model = Atributos::findOne(['atributo_id' => $atributo_id])) !== null) {

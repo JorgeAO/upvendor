@@ -16,45 +16,58 @@ Icon::map($this);
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <?php 
                 echo $form->field($model, 'fk_par_tipo_persona')
                     ->dropDownList(
                         ArrayHelper::map(TipoPersona::find()->asArray()->all(), 'tipopers_id', 'tipopers_descripcion'),
                         [
                             'id' => 'fk_par_tipo_persona',
-                            'onchange'=>'chgTipoPersona()'
+                            'onchange'=>'chgTipoPersona()',
+                            'class'=>'form-control form-control-sm'
                         ]
                     );
             ?>
         </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'fk_par_tipo_identificacion')->dropDownList(ArrayHelper::map(TipoIdentificacion::find()->asArray()->all(), 'tipoiden_id', 'tipoiden_descripcion')) ?>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'fk_par_tipo_identificacion')
+                ->dropDownList(ArrayHelper::map(TipoIdentificacion::find()->asArray()->all(), 'tipoiden_id', 'tipoiden_descripcion'),
+                [ 'class'=>'form-control form-control-sm' ]) ?>
         </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'proveedor_identificacion')->textInput(['maxlength' => true]) ?>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'proveedor_identificacion')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
         </div>
-        <div class="col-sm-6 natural">
-            <?= $form->field($model, 'proveedor_nombre')->textInput(['maxlength' => true]) ?>
+        <div class="col-sm-4 natural">
+            <?= $form->field($model, 'proveedor_primer_nombre')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
         </div>
-        <div class="col-sm-6 natural">
-            <?= $form->field($model, 'proveedor_apellido')->textInput(['maxlength' => true]) ?>
+        <div class="col-sm-4 natural">
+            <?= $form->field($model, 'proveedor_segundo_nombre')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
         </div>
-        <div class="col-sm-6 juridico">
-            <?= $form->field($model, 'proveedor_razonsocial')->textInput(['maxlength' => true]) ?>
+        <div class="col-sm-4 natural">
+            <?= $form->field($model, 'proveedor_primer_apellido')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
         </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'proveedor_celular')->textInput(['maxlength' => true]) ?>
+        <div class="col-sm-4 natural">
+            <?= $form->field($model, 'proveedor_segundo_apellido')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
         </div>
-        <div class="col-sm-6">
-            <?= $form->field($model, 'proveedor_correo')->textInput(['maxlength' => true]) ?>
+        <div class="col-sm-12 juridico">
+            <?= $form->field($model, 'proveedor_razonsocial')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
         </div>
-        <div class="col-sm-6 natural">
+        <div class="col-sm-3">
+            <?= $form->field($model, 'proveedor_celular')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
+        </div>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'proveedor_correo')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
+        </div>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'proveedor_direccion')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
+        </div>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'proveedor_barrio')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
+        </div>
+        <div class="col-sm-3 natural">
             <?= 
                 $form->field($model, 'proveedor_fnacimiento')->widget(DatePicker::className(), [
-                    'options' => [
-                        'class' => 'form-control',
-                    ],
+                    'options' => [ 'class'=>'form-control form-control-sm' ],
                     'clientOptions' => [
                         'changeMonth'=>true,
                         'changeYear'=>true,
@@ -64,14 +77,14 @@ Icon::map($this);
                 ])
             ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <label>Acepta Tratamiento de Datos</label><br>
             <?= $form->field($model,'proveedor_ttodatos')->checkBox(['label'=>'', $model->proveedor_ttodatos == '1' ? 'checked' : '']) ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <?php 
             if (isset($model->proveedor_id))
-                echo $form->field($model, 'fk_par_estados')->dropDownList(ArrayHelper::map(Estados::find()->asArray()->all(), 'estados_id', 'estados_descripcion'));
+                echo $form->field($model, 'fk_par_estados')->dropDownList(ArrayHelper::map(Estados::find()->asArray()->all(), 'estados_id', 'estados_descripcion'), ['class'=>'form-control form-control-sm']);
             ?>
         </div>
     </div>

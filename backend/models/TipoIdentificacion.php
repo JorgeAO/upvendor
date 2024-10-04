@@ -4,30 +4,13 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "tb_par_tipo_identificacion".
- *
- * @property int $tipoiden_id
- * @property string $tipoiden_descripcion
- * @property int $fk_par_estados
- * @property string $fc
- * @property int $uc
- * @property string|null $fm
- * @property int|null $um
- */
 class TipoIdentificacion extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'tb_par_tipo_identificacion';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -38,9 +21,6 @@ class TipoIdentificacion extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [

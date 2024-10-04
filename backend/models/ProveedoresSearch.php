@@ -6,38 +6,28 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Proveedores;
 
-/**
- * ProveedoresSearch represents the model behind the search form of `app\models\Proveedores`.
- */
 class ProveedoresSearch extends Proveedores
 {
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
             [['proveedor_id', 'fk_par_tipo_persona', 'fk_par_tipo_identificacion', 'fk_par_estados', 'uc', 'um'], 'integer'],
-            [['proveedor_identificacion', 'proveedor_nombre', 'proveedor_apellido', 'proveedor_razonsocial', 'proveedor_celular', 'proveedor_correo', 'proveedor_ttodatos', 'proveedor_fttodatos', 'proveedor_fnacimiento', 'fc', 'fm'], 'safe'],
+            [
+                [
+                    'proveedor_identificacion', 'proveedor_primer_nombre', 'proveedor_segundo_nombre', 'proveedor_primer_apellido', 'proveedor_segundo_apellido', 'proveedor_razonsocial', 'proveedor_nombrecompleto', 
+                    'proveedor_celular', 'proveedor_correo', 'proveedor_direccion', 'proveedor_barrio', 'proveedor_ttodatos', 'proveedor_fttodatos', 'proveedor_fnacimiento', 'fc', 'fm'
+                ],
+                'safe'
+            ],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
         $query = Proveedores::find();
@@ -71,11 +61,16 @@ class ProveedoresSearch extends Proveedores
         ]);
 
         $query->andFilterWhere(['like', 'proveedor_identificacion', $this->proveedor_identificacion])
-            ->andFilterWhere(['like', 'proveedor_nombre', $this->proveedor_nombre])
-            ->andFilterWhere(['like', 'proveedor_apellido', $this->proveedor_apellido])
+            ->andFilterWhere(['like', 'proveedor_primer_nombre', $this->proveedor_primer_nombre])
+            ->andFilterWhere(['like', 'proveedor_segundo_nombre', $this->proveedor_segundo_nombre])
+            ->andFilterWhere(['like', 'proveedor_primer_apellido', $this->proveedor_primer_apellido])
+            ->andFilterWhere(['like', 'proveedor_segundo_apellido', $this->proveedor_segundo_apellido])
             ->andFilterWhere(['like', 'proveedor_razonsocial', $this->proveedor_razonsocial])
+            ->andFilterWhere(['like', 'proveedor_nombrecompleto', $this->proveedor_nombrecompleto])
             ->andFilterWhere(['like', 'proveedor_celular', $this->proveedor_celular])
             ->andFilterWhere(['like', 'proveedor_correo', $this->proveedor_correo])
+            ->andFilterWhere(['like', 'proveedor_direccion', $this->proveedor_direccion])
+            ->andFilterWhere(['like', 'proveedor_barrio', $this->proveedor_barrio])
             ->andFilterWhere(['like', 'proveedor_ttodatos', $this->proveedor_ttodatos]);
 
         return $dataProvider;

@@ -4,36 +4,13 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "tb_com_compras_productos".
- *
- * @property int $comprod_id
- * @property int $fk_com_compras
- * @property int $fk_pro_productos
- * @property int $comprod_cantidad
- * @property float $comprod_vlr_unitario
- * @property float $comprod_vlr_total
- * @property float $comprod_dcto
- * @property float $comprod_vlr_final
- * @property int $comprod_entregado
- * @property string $fc
- * @property int $uc
- * @property string|null $fm
- * @property int|null $um
- */
 class ComprasProductos extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'tb_com_compras_productos';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -44,9 +21,6 @@ class ComprasProductos extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [

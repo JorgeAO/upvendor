@@ -12,7 +12,7 @@ Icon::map($this);
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'marca_descripcion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'marca_descripcion')->textInput(['maxlength' => true, 'class'=>'form-control form-control-sm']) ?>
     
     <?php 
         if (isset($model->marca_id))

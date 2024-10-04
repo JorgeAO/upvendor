@@ -18,14 +18,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a(Icon::show('arrow-left').' Volver', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
         <?= Html::a(Icon::show('plus').' Agregar', ['create'], ['class' => 'btn btn-azul btn-sm']) ?>
-        <?= Html::a(Icon::show("pencil-alt").' Editar', ['update', 'compra_id' => $model->compra_id], ['class' => 'btn btn-sm btn-azul']) ?>
-        <?= Html::a(Icon::show("trash").' Eliminar', ['delete', 'compra_id' => $model->compra_id], [
-            'class' => 'btn btn-sm btn-danger',
-            'data' => [
-                'confirm' => '¿Está seguro que desea eliminar el registro?',
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php if ($model->fk_com_estados_compra == 1): ?>
+            <?= Html::a(Icon::show("pencil-alt").' Editar', ['update', 'compra_id' => $model->compra_id], ['class' => 'btn btn-sm btn-azul']) ?>
+            <?= Html::a(Icon::show("times").' Anular', ['delete', 'compra_id' => $model->compra_id], [
+                'class' => 'btn btn-sm btn-danger',
+                'data' => [
+                    'confirm' => '¿Está seguro que desea anular la compra?',
+                    'method' => 'post',
+                ],
+            ]) ?>
+        <?php endif; ?>
     </p>
     <div class="row">
         <div class="col-sm-4">
@@ -41,9 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
                     ],
                     'compra_fecha_compra',
-                    'compra_fecha_confirmacion',
-                    'compra_fecha_cierre',
-                    'compra_fecha_anulacion',
                     [
                         'label'=>'Estado',
                         'value'=>function($data){
@@ -66,22 +65,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <table class="table table-sm table-bordered table-striped table-hover">
                         <tr>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Valor Unitario</th>
-                            <th>Valor Total</th>
-                            <th>% Descuento</th>
-                            <th>Valor Final</th>
+                            <th style="width: 40%;">Producto</th>
+                            <th style="width: 12%;">Cantidad</th>
+                            <th style="width: 12%;">Valor Unitario</th>
+                            <th style="width: 12%;">Valor Total</th>
+                            <th style="width: 12%;">% Descuento</th>
+                            <th style="width: 12%;">Valor Final</th>
                         </tr>
                         <?php
                             foreach ($productos as $key => $value) {
                                 echo '<tr>
-                                        <td>'.$value['producto_nombre'].'</td>
+                                        <td>'.$value['producto_descripcion'].'</td>
                                         <td class="text-right">'.$value['comprod_cantidad'].'</td>
-                                        <td class="text-right">'.Yii::$app->formatter->asCurrency($value['comprod_vlr_unitario']).'</td>
-                                        <td class="text-right">'.Yii::$app->formatter->asCurrency($value['comprod_vlr_total']).'</td>
+                                        <td class="text-right">'.Yii::$app->formatter->asCurrency($value['comprod_vlr_unitario'], '$').'</td>
+                                        <td class="text-right">'.Yii::$app->formatter->asCurrency($value['comprod_vlr_total'], '$').'</td>
                                         <td class="text-right">'.$value['comprod_dcto'].'</td>
-                                        <td class="text-right">'.Yii::$app->formatter->asCurrency($value['comprod_vlr_final']).'</td>
+                                        <td class="text-right">'.Yii::$app->formatter->asCurrency($value['comprod_vlr_final'], '$').'</td>
                                     </tr>';
                             }
                         ?>
@@ -90,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="card mt-3">
                 <div class="card-header bg-purpura">
-                    Acciones
+                    Acciones Rápidas
                 </div>
                 <div class="card-body">
                     <?= Html::a(Icon::show('paper-plane').' Enviar al Proveedor', ['enviar-compra', 'compra_id' => $model->compra_id], ['class' => 'btn btn-sm btn-azul']) ?>

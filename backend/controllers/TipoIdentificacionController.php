@@ -4,21 +4,15 @@ namespace backend\controllers;
 
 use app\models\TipoIdentificacion;
 use app\models\TipoIdentificacionSearch;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * TipoIdentificacionController implements the CRUD actions for TipoIdentificacion model.
- */
 class TipoIdentificacionController extends Controller
 {
     private $strRuta = "/parametros/tipoIdentificacion/";
     private $intOpcion = 2001;
 
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
@@ -34,11 +28,6 @@ class TipoIdentificacionController extends Controller
         );
     }
 
-    /**
-     * Lists all TipoIdentificacion models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'r');
@@ -53,12 +42,6 @@ class TipoIdentificacionController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single TipoIdentificacion model.
-     * @param int $tipoiden_id Tipoiden ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($tipoiden_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
@@ -69,11 +52,6 @@ class TipoIdentificacionController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new TipoIdentificacion model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'c');
@@ -83,6 +61,7 @@ class TipoIdentificacionController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->tipoiden_descripcion = mb_strtoupper($model->tipoiden_descripcion, 'UTF-8');
             $model->fc = date('Y-m-d H:i:s');
             $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
 
@@ -98,13 +77,6 @@ class TipoIdentificacionController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing TipoIdentificacion model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $tipoiden_id Tipoiden ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($tipoiden_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'u');
@@ -114,6 +86,7 @@ class TipoIdentificacionController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
+            $model->tipoiden_descripcion = mb_strtoupper($model->tipoiden_descripcion, 'UTF-8');
             $model->fm = date('Y-m-d H:i:s');
             $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
             
@@ -126,13 +99,6 @@ class TipoIdentificacionController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing TipoIdentificacion model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $tipoiden_id Tipoiden ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($tipoiden_id)
     {
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
@@ -143,13 +109,6 @@ class TipoIdentificacionController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the TipoIdentificacion model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $tipoiden_id Tipoiden ID
-     * @return TipoIdentificacion the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($tipoiden_id)
     {
         if (($model = TipoIdentificacion::findOne(['tipoiden_id' => $tipoiden_id])) !== null) {
