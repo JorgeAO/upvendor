@@ -51,6 +51,16 @@ class PermisosController extends Controller
         // Se eliminan todos los permisos del perfil antes de insertar los nuevos
         Permisos::deleteAll(['fk_seg_perfiles' => $post['perfil']]);
 
+        if ($post['perfil'] == 1 && $_SESSION['as_usuario_sesion']['fk_seg_perfiles'] != 1)
+        {
+            $jsonRta = new stdClass;
+            $jsonRta->error = true;
+            $jsonRta->mensaje = 'Usted no posee permisos para ejecutar esta acción';
+
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            return $jsonRta;
+        }
+
         // Se recorren los permisos que vienen del formulario
         foreach ($post['permisos'] as $key => $value) 
         {

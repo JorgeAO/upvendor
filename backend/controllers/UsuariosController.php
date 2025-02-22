@@ -108,6 +108,16 @@ class UsuariosController extends Controller
         $rta = PermisosController::validarPermiso($this->intOpcion, 'd');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
+        // Agrega una restricción para que no se pueda eliminar el usuario usuario_id = 1
+        if ($usuarios_id == 1) {
+            return $this->render('/site/error', [
+                'data' => [
+                    "error" => true,
+                    "mensaje" => "No se puede eliminar este usuario",
+                ]
+            ]);
+        }
+
         $this->findModel($usuarios_id)->delete();
 
         return $this->redirect(['index']);
