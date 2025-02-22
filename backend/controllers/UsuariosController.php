@@ -66,7 +66,7 @@ class UsuariosController extends Controller
             $model->usuarios_apellido = mb_strtoupper($model->usuarios_apellido, 'UTF-8');
             $model->usuarios_clave = md5($model->usuarios_clave);
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             if ($model->save())
                 return $this->redirect(['view', 'usuarios_id' => $model->usuarios_id]);
@@ -88,7 +88,13 @@ class UsuariosController extends Controller
 
         $model = $this->findModel($usuarios_id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->usuarios_nombre = mb_strtoupper($model->usuarios_nombre, 'UTF-8');  
+            $model->usuarios_apellido = mb_strtoupper($model->usuarios_apellido, 'UTF-8');
+            $model->fm = date('Y-m-d H:i:s');
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
+            
+            $model->save();
             return $this->redirect(['view', 'usuarios_id' => $model->usuarios_id]);
         }
 
@@ -129,7 +135,7 @@ class UsuariosController extends Controller
 
             // Recuperar el usuario que está en sesión
             $usuario = new Usuarios();
-            $usuario = Usuarios::findOne(['usuarios_id' => $_SESSION['usuario_sesion']['usuarios_id']]);
+            $usuario = Usuarios::findOne(['usuarios_id' => $_SESSION['as_usuario_sesion']['usuarios_id']]);
 
             // Validar que la contraseña acutal ingresada sea correcta
             if ($usuario->usuarios_clave != md5($cambioClave["usuarios_clave"])){
@@ -156,7 +162,7 @@ class UsuariosController extends Controller
             // Fijar la nueva contraseña y los datos de auditoría
             $usuario->usuarios_clave = md5($cambioClave['usuarios_nuevaclave']);
             $usuario->fm = date('Y-m-d H:i:s');
-            $usuario->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $usuario->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             // Guardar los cambios
             if ($usuario->save()) {
@@ -199,7 +205,7 @@ class UsuariosController extends Controller
             // Fijar la nueva contraseña y los datos de auditoría
             $usuario->usuarios_clave = md5($cambioClave['usuarios_nuevaclave']);
             $usuario->fm = date('Y-m-d H:i:s');
-            $usuario->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $usuario->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             // Guardar los cambios
             if ($usuario->save()) {
@@ -214,7 +220,7 @@ class UsuariosController extends Controller
 
     public function actionCerrarSesion()
     {
-        unset($_SESSION['usuario_sesion']);
+        unset($_SESSION['as_usuario_sesion']);
 
         return $this->redirect(['/site/login']);
     }

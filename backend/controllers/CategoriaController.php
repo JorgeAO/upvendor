@@ -63,7 +63,7 @@ class CategoriaController extends Controller
         {
             $model->categoria_descripcion = mb_strtoupper($model->categoria_descripcion);
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             if ($model->save()) {
                 return $this->redirect(['view', 'categoria_id' => $model->categoria_id]);
@@ -88,7 +88,7 @@ class CategoriaController extends Controller
         {
             $model->categoria_descripcion = mb_strtoupper($model->categoria_descripcion);
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
             
             if ($model->save())
                 return $this->redirect(['view', 'categoria_id' => $model->categoria_id]);

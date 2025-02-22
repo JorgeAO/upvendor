@@ -1,5 +1,6 @@
 <?php
 use app\models\Estados;
+use app\models\FormaPago;
 use app\models\Proveedores;
 use kartik\icons\Icon;
 use yii\helpers\ArrayHelper;
@@ -45,27 +46,42 @@ Icon::map($this);
                     Datos de la Compra
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <?= $form->field($model, 'compra_fecha_compra')
-                                ->textInput([
-                                    'class' => 'form-control form-control-sm',
-                                    'readonly'=>true,
-                                    'value'=>Date('Y-m-d')
-                                ]) 
-                            ?>
-                        </div>
-                        <div class="col-sm-6">
-                            <?php
-                                echo '<label>Total</label>';
-                                echo Html::input('text', 'compra_total', '', [
-                                    'id' => 'compra_total',
-                                    'class' => 'form-control form-control-sm',
-                                    'readonly' => true
-                                ])
-                            ?>
-                        </div>
-                    </div>
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td><label>Fecha de Compra</label></td>
+                            <td>
+                                <?= $form->field($model, 'compra_fecha_compra')
+                                    ->textInput([
+                                        'class' => 'form-control form-control-sm',
+                                        'readonly'=>true,
+                                        'value'=>Date('Y-m-d'),
+                                    ])->label(false)
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Forma de Pago</label></td>
+                            <td>
+                                <?= $form->field($model, 'fk_par_forma_pago')->dropDownList(
+                                    ArrayHelper::map(FormaPago::find()->asArray()->all(), 'formpago_id', 'formpago_descripcion'),
+                                        ['class' => 'form-control form-control-sm']
+                                    )->label(false) 
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Total</label></td>
+                            <td>
+                                <?php
+                                    echo Html::input('text', 'compra_total', '', [
+                                        'id' => 'compra_total',
+                                        'class' => 'form-control form-control-sm',
+                                        'readonly' => true
+                                    ])
+                                ?>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -117,6 +133,18 @@ Icon::map($this);
         <?php endif; ?>
     </div>
     <?php ActiveForm::end(); ?>
+
+    <?php
+
+        if (isset($data))
+        {
+            if ($data['error'] == true) {
+                echo '<div class="alert alert-danger" role="alert">';
+                echo Icon::show('times-circle').' '.$data['mensaje'];
+                echo '</div>';
+            }
+        }
+    ?>
 
 </div>
 <script>

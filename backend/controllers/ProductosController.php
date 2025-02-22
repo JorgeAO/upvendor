@@ -82,7 +82,7 @@ class ProductosController extends Controller
             $model->producto_referencia = mb_strtoupper($model->producto_referencia);
             $model->productos_precio_con_imp = 1;
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             $model->save();
 
@@ -94,7 +94,7 @@ class ProductosController extends Controller
                     $productoAtributo->fk_pro_atributos = $value['atributo_'.$key];
                     $productoAtributo->fk_pro_atributos_valor = $value['atrivalor_'.$key];
                     $productoAtributo->fc = date('Y-m-d H:i:s');;
-                    $productoAtributo->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                    $productoAtributo->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
     
                     $productoAtributo->save();
                 }
@@ -125,7 +125,7 @@ class ProductosController extends Controller
             $model->producto_descripcion = mb_strtoupper($model->producto_descripcion);
             $model->producto_referencia = mb_strtoupper($model->producto_referencia);
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             $model->save();
 
@@ -143,7 +143,7 @@ class ProductosController extends Controller
                     $productoAtributo->fk_pro_atributos = $value['atributo_'.$key];
                     $productoAtributo->fk_pro_atributos_valor = $value['atrivalor_'.$key];
                     $productoAtributo->fc = date('Y-m-d H:i:s');;
-                    $productoAtributo->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                    $productoAtributo->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                     $productoAtributo->save();
                 }

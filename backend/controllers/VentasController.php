@@ -96,7 +96,7 @@ class VentasController extends Controller
             $model->fk_ven_estado_venta = 1;
             $model->venta_fecha_venta = date('Y-m-d H:i:s');
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             $model->save();
 
@@ -113,7 +113,7 @@ class VentasController extends Controller
                 $ventaProducto->ventprod_dcto = $value['dcto_'.$key];
                 $ventaProducto->ventprod_vlr_final = $value['vlr_final_'.$key]; 
                 $ventaProducto->fc = date('Y-m-d H:i:s');
-                $ventaProducto->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                $ventaProducto->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                 $ventaProducto->save();
 
@@ -141,7 +141,7 @@ class VentasController extends Controller
             $movimiento->fk_caj_cajas = $formaPago->fk_caj_cajas;
             $movimiento->movimiento_monto = $totalVenta;
             $movimiento->fc = date('Y-m-d H:i:s');
-            $movimiento->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $movimiento->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             $movimiento->save();
 

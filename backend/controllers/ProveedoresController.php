@@ -170,7 +170,7 @@ class ProveedoresController extends Controller
             $model->proveedor_barrio = mb_strtoupper($model->proveedor_barrio);
             $model->proveedor_fttodatos = date('Y-m-d H:i:s');
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             if ($model->save()) {
                 return $this->redirect(['view', 'proveedor_id' => $model->proveedor_id]);
@@ -309,7 +309,7 @@ class ProveedoresController extends Controller
             $model->proveedor_direccion = mb_strtoupper($model->proveedor_direccion);
             $model->proveedor_barrio = mb_strtoupper($model->proveedor_barrio);
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
             
             if ($model->save())
                 return $this->redirect(['view', 'proveedor_id' => $model->proveedor_id]);

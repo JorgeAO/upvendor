@@ -64,7 +64,7 @@ class TipoMovimientoController extends Controller
                 $model->tipomovi_descripcion = mb_strtoupper($model->tipomovi_descripcion);
                 $model->fk_par_estados = 1;
                 $model->fc = date('Y-m-d H:i:s');
-                $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                 if ($model->save()) {
                     return $this->redirect(['view', 'tipomovi_id' => $model->tipomovi_id]);
@@ -90,7 +90,7 @@ class TipoMovimientoController extends Controller
             if ($model->load($this->request->post())) {
                 $model->tipomovi_descripcion = mb_strtoupper($model->tipomovi_descripcion);
                 $model->fm = date('Y-m-d H:i:s');
-                $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+                $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                 if ($model->save()) {
                     return $this->redirect(['view', 'tipomovi_id' => $model->tipomovi_id]);

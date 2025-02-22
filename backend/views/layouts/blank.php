@@ -1,7 +1,10 @@
 <?php
 
 use backend\assets\AppAsset;
+use kartik\icons\Icon;
 use yii\helpers\Html;
+
+Icon::map($this);
 
 AppAsset::register($this);
 

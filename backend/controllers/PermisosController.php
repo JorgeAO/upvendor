@@ -121,7 +121,7 @@ class PermisosController extends Controller
 
     public static function validarPermiso($intOpcion, $chrAccion)
     {
-        if (!isset($_SESSION['usuario_sesion']))
+        if (!isset($_SESSION['as_usuario_sesion']))
         {
             return [
                 'error' => true,
@@ -132,7 +132,7 @@ class PermisosController extends Controller
         $rslConsulta = (new Query())
             ->select($chrAccion)
             ->from('tb_seg_permisos')
-            ->Where('fk_seg_perfiles = '.$_SESSION['usuario_sesion']['fk_seg_perfiles'])
+            ->Where('fk_seg_perfiles = '.$_SESSION['as_usuario_sesion']['fk_seg_perfiles'])
             ->andwhere('fk_seg_opciones = '.$intOpcion)
             ->all();
         
@@ -153,7 +153,7 @@ class PermisosController extends Controller
         $arrMenu = [];
 
         // Si no se encuentra un usuario en sesión se devuelve un menú que sólo contine la opción de loguearse
-        if (!isset($_SESSION['usuario_sesion']))
+        if (!isset($_SESSION['as_usuario_sesion']))
         {
             array_push($arrMenu, ['label' => 'Login', 'url' => ['/site/login']]);
             return $arrMenu;
@@ -166,7 +166,7 @@ class PermisosController extends Controller
             opci.opciones_id, opci.opciones_nombre, opci.opciones_enlace
             from tb_seg_opciones opci
             join tb_seg_modulos modu on (opci.fk_seg_modulos = modu.modulos_id) 
-            left join tb_seg_permisos perm on (perm.fk_seg_opciones = opci.opciones_id and perm.fk_seg_perfiles = ".$_SESSION['usuario_sesion']['fk_seg_perfiles'].")
+            left join tb_seg_permisos perm on (perm.fk_seg_opciones = opci.opciones_id and perm.fk_seg_perfiles = ".$_SESSION['as_usuario_sesion']['fk_seg_perfiles'].")
             where modu.fk_par_estados = 1
             and opci.fk_par_estados = 1
             and perm.m = 1
@@ -228,7 +228,7 @@ class PermisosController extends Controller
         array_push(
             $arrMenu, 
             [
-                'label' => '<i class="fas fa-user"></i> '.$_SESSION['usuario_sesion']['usuarios_nombre'].' '.$_SESSION['usuario_sesion']['usuarios_apellido'], 
+                'label' => '<i class="fas fa-user"></i> '.$_SESSION['as_usuario_sesion']['usuarios_nombre'].' '.$_SESSION['as_usuario_sesion']['usuarios_apellido'], 
                 'items'=>[
                     [
                         'label'=>'Salir', 

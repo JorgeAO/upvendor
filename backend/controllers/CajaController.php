@@ -68,7 +68,7 @@ class CajaController extends Controller
                 $model->fk_par_estado = 1; 
                 $model->caja_monto = str_replace(',', '', $model->caja_monto);
                 $model->fc = date('Y-m-d H:i:s');
-                $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                 if ($model->save()) {
                     return $this->redirect(['view', 'caja_id' => $model->caja_id]);
@@ -94,7 +94,7 @@ class CajaController extends Controller
             $model->caja_descripcion = mb_strtoupper($model->caja_descripcion);
             $model->caja_monto = str_replace(',', '', $model->caja_monto);
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             if ($model->save()) {
                 return $this->redirect(['view', 'caja_id' => $model->caja_id]);

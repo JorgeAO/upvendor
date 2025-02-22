@@ -11,12 +11,9 @@ Icon::map($this);
 $this->title = $model->usuarios_id.' - '.$model->usuarios_nombre.' '.$model->usuarios_apellido;
 $this->params['breadcrumbs'][] = ['label' => 'Usuarios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 ?>
 <div class="usuarios-view">
-
     <h4><?= Html::encode($this->title) ?></h4>
-
     <p>
         <?= Html::a(Icon::show('arrow-left').' Volver', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
         <?= Html::a(Icon::show('plus').' Agregar', ['create'], ['class' => 'btn btn-azul btn-sm']) ?>
@@ -29,32 +26,35 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'usuarios_id',
-            'usuarios_nombre',
-            'usuarios_apellido',
-            'usuarios_telefono',
-            'usuarios_correo',
-            [
-                'label'=>'Perfil',
-                'value'=>function($data){
-                    return Perfiles::find()->where(['perfiles_id'=>$data->fk_seg_perfiles])->all()[0]->perfiles_descripcion;
-                }
-            ],
-            [
-                'label'=>'Estado',
-                'value'=>function($data){
-                    return Estados::find()->where(['estados_id'=>$data->fk_par_estados])->all()[0]->estados_descripcion;
-                }
-            ],
-            'fc',
-            'uc',
-            'fm',
-            'um',
-        ],
-    ]) ?>
-
+    <div class="row">
+        <div class="col-sm-6">
+            <?= DetailView::widget([
+                'model' => $model,
+                'options' => ['class' => 'table table-sm table-bordered table-striped table-hover'],
+                'attributes' => [
+                    'usuarios_id',
+                    'usuarios_nombre',
+                    'usuarios_apellido',
+                    'usuarios_telefono',
+                    'usuarios_correo',
+                    [
+                        'label'=>'Perfil',
+                        'value'=>function($data){
+                            return Perfiles::find()->where(['perfiles_id'=>$data->fk_seg_perfiles])->all()[0]->perfiles_descripcion;
+                        }
+                    ],
+                    [
+                        'label'=>'Estado',
+                        'value'=>function($data){
+                            return Estados::find()->where(['estados_id'=>$data->fk_par_estados])->all()[0]->estados_descripcion;
+                        }
+                    ],
+                    'fc',
+                    'uc',
+                    'fm',
+                    'um',
+                ],
+            ]) ?>
+        </div>
+    </div>
 </div>

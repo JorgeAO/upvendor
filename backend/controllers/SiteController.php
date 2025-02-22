@@ -120,13 +120,14 @@ class SiteController extends Controller
 
             unset($arrUsuario[0]["usuarios_clave"]);
 
-            Yii::$app->session->set('usuario_sesion', $arrUsuario[0]);
+            Yii::$app->session->set('as_usuario_sesion', $arrUsuario[0]);
                 
             return $this->render('/layouts/blank');
         }
 
         $layout = 'blank';
 
+        unset($_SESSION['as_usuario_sesion']);
         return $this->render('login', [
             'usuario' => $objUsuarios,
         ]);

@@ -2,15 +2,19 @@
 
 namespace backend\controllers;
 
+use app\models\Caja;
 use app\models\Compras;
 use app\models\ComprasProductos;
 use app\models\ComprasSearch;
+use app\models\FormaPago;
+use app\models\Movimientos;
 use app\models\Productos;
 use app\models\Proveedores;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use stdClass;
 
 class ComprasController extends Controller
 {
@@ -78,54 +82,132 @@ class ComprasController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()))
         {
-            $proveedorIdentificacion = explode(' - ', $model->fk_pro_proveedores)[0];
-            $proveedor = Proveedores::find()->select('proveedor_id')->where(['proveedor_identificacion' => $proveedorIdentificacion])->all();
+            $transaction = Yii::$app->db->beginTransaction();
+            $productosComprados = [];
 
-            $model->fk_pro_proveedores = $proveedor[0]->proveedor_id;
-            $model->fk_com_estados_compra = 1; // Estado de la compra: 1 - Borrador
-            $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            try {
+                $proveedorIdentificacion = explode(' - ', $model->fk_pro_proveedores)[0];
+                $proveedor = Proveedores::find()->select('proveedor_id')->where(['proveedor_identificacion' => $proveedorIdentificacion])->all();
 
-            $model->save();
+                $valorTotal = 0;
 
-            foreach ($this->request->post()['productos'] as $key => $value)
-            {
-                $compraProducto = new ComprasProductos();
-                $compraProducto->fk_com_compras = $model->compra_id;
-                $compraProducto->fk_pro_productos = $value['producto_'.$key];
-                $compraProducto->comprod_cantidad = $value['cantidad_'.$key];
-                $compraProducto->comprod_vlr_unitario = $value['vlr_unit_'.$key];
-                $compraProducto->comprod_vlr_total = $value['vlr_total_'.$key];
-                $compraProducto->comprod_dcto = $value['dcto_'.$key];
-                $compraProducto->comprod_vlr_final = $value['vlr_final_'.$key];
-                $compraProducto->comprod_entregado = 0;
-                $compraProducto->fc = date('Y-m-d H:i:s');
-                $compraProducto->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                foreach ($this->request->post()['productos'] as $key => $value) {
+                    $valorTotal += $value['vlr_total_'.$key];
 
-                // Consultar información del producto
-                $producto = Productos::findOne(["producto_id" => $value['producto_'.$key]]);
+                    $productoComprado = [];
+                    $productoComprado['fk_pro_productos'] = $value['producto_'.$key];
+                    $productoComprado['comprod_cantidad'] = $value['cantidad_'.$key];
+                    $productoComprado['comprod_vlr_unitario'] = $value['vlr_unit_'.$key];
+                    $productoComprado['comprod_dcto'] = $value['dcto_'.$key];
+                    $productoComprado['valor_total'] = $value['vlr_total_'.$key];
+                    $productoComprado['valor_final'] = $value['vlr_final_'.$key];
+                    
+                    array_push($productosComprados, $productoComprado);
+                }
 
-                // Recalcular el precio de venta
-                // Calcular el nuevo precio de compra promedio
-                $stockActual = $producto->producto_stock;
-                $precioCompraActual = $producto->producto_preciocompra;
-                $cantidadNueva = $value['cantidad_'.$key];
-                $precioCompraNuevo = $value['vlr_final_'.$key] / $value['cantidad_'.$key];
+                //  Obtener información de la forma de pago
+                $formaPago = FormaPago::find()->where(['formpago_id' => $model->fk_par_forma_pago])->one();
 
-                $totalValorActual = $stockActual * $precioCompraActual;
+                // Obtener información de la caja
+                $caja = Caja::find()->where(['caja_id' => $formaPago->fk_caj_cajas])->one();
 
-                $nuevoStock = $stockActual + $cantidadNueva;
-                $nuevoPrecioCompraPromedio = round(($totalValorActual + $value['vlr_final_'.$key]) / $nuevoStock, 0);
-                
-                $producto->producto_preciocompra = $nuevoPrecioCompraPromedio;
-                $producto->producto_stock = $nuevoStock; 
+                // Validar si la cja tiene saldo suficiente para la compra
+                if ($caja->caja_monto < $valorTotal) {
+                    throw new \Exception('La caja '.$caja->caja_descripcion.' no tiene saldo suficiente para la compra. El saldo disponible es: '.$caja->caja_monto);
+                }
 
-                $producto->save();
+                $productos = Productos::find()->where(['producto_id' => $productosComprados])->all();
+                foreach ($productos as $key => $value) {
+                    if ($value->producto_stock < $value['cantidad_'.$key]) {
+                        throw new \Exception('El stock del producto '.$value->producto_nombre.' es insuficiente.');
+                    }
+                }
 
-                $compraProducto->save();
+                $model->fk_pro_proveedores = $proveedor[0]->proveedor_id;
+                $model->fk_com_estados_compra = 1; // 1 - Confirmada
+                $model->fc = date('Y-m-d H:i:s');
+                $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
+
+                if (!$model->save()){
+                    throw new \Exception('Error al guardar la compra.');
+                }
+
+                foreach ($this->request->post()['productos'] as $key => $value)
+                {
+                    $compraProducto = new ComprasProductos();
+                    $compraProducto->fk_com_compras = $model->compra_id;
+                    $compraProducto->fk_pro_productos = $value['producto_'.$key];
+                    $compraProducto->comprod_cantidad = $value['cantidad_'.$key];
+                    $compraProducto->comprod_vlr_unitario = $value['vlr_unit_'.$key];
+                    $compraProducto->comprod_vlr_total = $value['vlr_total_'.$key];
+                    $compraProducto->comprod_dcto = $value['dcto_'.$key];
+                    $compraProducto->comprod_vlr_final = $value['vlr_final_'.$key];
+                    $compraProducto->comprod_entregado = 0;
+                    $compraProducto->fc = date('Y-m-d H:i:s');
+                    $compraProducto->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
+
+                    // Consultar información del producto
+                    $producto = Productos::findOne(["producto_id" => $value['producto_'.$key]]);
+
+                    // Recalcular el precio de venta
+                    // Calcular el nuevo precio de compra promedio
+                    $stockActual = $producto->producto_stock;
+                    $precioCompraActual = $producto->producto_preciocompra;
+                    $cantidadNueva = $value['cantidad_'.$key];
+                    $precioCompraNuevo = $value['vlr_final_'.$key] / $value['cantidad_'.$key];
+
+                    $totalValorActual = $stockActual * $precioCompraActual;
+
+                    $nuevoStock = $stockActual + $cantidadNueva;
+                    $nuevoPrecioCompraPromedio = round(($totalValorActual + $value['vlr_final_'.$key]) / $nuevoStock, 0);
+                    
+                    $producto->producto_preciocompra = $nuevoPrecioCompraPromedio;
+                    $producto->producto_stock = $nuevoStock; 
+
+                    if (!$producto->save()) {
+                        throw new \Exception('Error al actualizar el producto '.$producto->producto_descripcion.'.');
+                    }
+
+                    if (!$compraProducto->save()){
+                        throw new \Exception('Error al guardar el producto '.$producto->producto_descripcion.' en la compra.');
+                    }
+                }
+
+                // Afectar la caja
+                $caja->caja_monto = $caja->caja_monto - $valorTotal;
+                if (!$caja->save()){
+                    throw new \Exception('Error al actualizar el saldo de la caja.');   
+                }
+
+                // Registrar el movimiento de la caja
+                $movimientoCaja = new Movimientos();
+                $movimientoCaja->movimiento_observacion = 'Compra #'.$model->compra_id;
+                $movimientoCaja->movimiento_fecha = date('Y-m-d H:i:s');
+                $movimientoCaja->fk_caj_tipo_movimiento = 4; // 4 - Compra
+                $movimientoCaja->fk_caj_cajas = $caja->caja_id;
+                $movimientoCaja->movimiento_monto = $valorTotal;
+                $movimientoCaja->fc = date('Y-m-d H:i:s');
+                $movimientoCaja->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
+
+                if (!$movimientoCaja->save()){
+                    throw new \Exception('Error al guardar el movimiento de la caja.');
+                }
+
+                $transaction->commit();
+
+                return $this->redirect(['view', 'compra_id' => $model->compra_id]);
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+
+                return $this->render($this->strRuta.'create', [
+                    'model' => $model,
+                    'compraProductos' => $productosComprados,
+                    'data' => [
+                        'error' => true,
+                        'mensaje' => $e->getMessage(),
+                    ]
+                ]);
             }
-
-            return $this->redirect(['view', 'compra_id' => $model->compra_id]);
         } 
         else 
         {
@@ -134,6 +216,11 @@ class ComprasController extends Controller
 
         return $this->render($this->strRuta.'create', [
             'model' => $model,
+            'compraProductos' => [],
+            'data' => [
+                'error' => false,
+                'message' => '',
+            ]
         ]);
     }
     
@@ -151,7 +238,7 @@ class ComprasController extends Controller
 
             $model->fk_pro_proveedores = $proveedor[0]->proveedor_id;
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             $model->save();
 
@@ -198,7 +285,7 @@ class ComprasController extends Controller
                 $compraProducto->comprod_vlr_final = $value['vlr_final_'.$key];
                 $compraProducto->comprod_entregado = 0;
                 $compraProducto->fc = date('Y-m-d H:i:s');
-                $compraProducto->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                $compraProducto->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                 // Consultar información del producto
                 $producto = Productos::findOne(["producto_id" => $value['producto_'.$key]]);

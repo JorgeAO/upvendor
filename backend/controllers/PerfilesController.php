@@ -63,7 +63,7 @@ class PerfilesController extends Controller
             if ($model->load($this->request->post())) {
                 $model->perfiles_descripcion = mb_strtoupper($model->perfiles_descripcion, 'UTF-8');
                 $model->fc = date('Y-m-d H:i:s');
-                $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
                 $model->save();
                 return $this->redirect(['view', 'perfiles_id' => $model->perfiles_id]);
             }
@@ -86,7 +86,7 @@ class PerfilesController extends Controller
         if ($this->request->isPost && $model->load($this->request->post()))  {
             $model->perfiles_descripcion = mb_strtoupper($model->perfiles_descripcion, 'UTF-8');
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             $model->save();
             

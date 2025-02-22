@@ -7,26 +7,25 @@ use yii\widgets\ActiveForm;
 
 Icon::map($this);
 ?>
-
 <div class="tipo-identificacion-form">
-
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'tipoiden_descripcion')->textInput(['maxlength' => true, 'class' => 'form-control form-control-sm']) ?>
-    
-    <?php 
-        if (isset($model->tipoiden_id))
-            echo $form->field($model, 'fk_par_estados')->dropDownList(
-                ArrayHelper::map(Estados::find()->asArray()->all(), 'estados_id', 'estados_descripcion'), 
-                ['class' => 'form-control form-control-sm']
-            );
-    ?>
-
+    <div class="row">
+        <div class="col-sm-6">
+            <?= $form->field($model, 'tipoiden_descripcion')->textInput(['maxlength' => true, 'class' => 'form-control form-control-sm']) ?>
+        </div>
+        <div class="col-sm-6">
+            <?php 
+                if (isset($model->tipoiden_id))
+                    echo $form->field($model, 'fk_par_estados')->dropDownList(
+                        ArrayHelper::map(Estados::find()->asArray()->all(), 'estados_id', 'estados_descripcion'), 
+                        ['class' => 'form-control form-control-sm']
+                    );
+            ?>
+        </div>
+    </div>
     <div class="form-group">
         <?= Html::submitButton(Icon::show('save').' Guardar', ['class' => 'btn btn-sm btn-azul']) ?>
         <?= Html::a(Icon::show('times').' Cancelar', ['index'], ['class' => 'btn btn-sm btn-danger']) ?>
     </div>
-
     <?php ActiveForm::end(); ?>
-
 </div>

@@ -65,7 +65,7 @@ class AtributosController extends Controller
         if ($this->request->isPost && $model->load($this->request->post()))
         {
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             if ($model->save()) {
                 return $this->redirect(['view', 'atributo_id' => $model->atributo_id]);
@@ -89,7 +89,7 @@ class AtributosController extends Controller
         if ($this->request->isPost && $model->load($this->request->post()))
         {
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
             
             if ($model->save())
                 return $this->redirect(['view', 'atributo_id' => $model->atributo_id]);

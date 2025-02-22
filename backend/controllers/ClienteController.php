@@ -4,7 +4,9 @@ namespace backend\controllers;
 
 use app\models\Cliente;
 use app\models\ClienteSearch;
+use app\models\Ventas;
 use stdClass;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -48,8 +50,27 @@ class ClienteController extends Controller
         $rta = PermisosController::validarPermiso($this->intOpcion, 'v');
         if ($rta['error']) return $this->render('/site/error', [ 'data' => $rta ]);
 
+        // Consultar las últimas 5 compras del cliente ordenadas de la más reciente a la más antigua
+        $ventas = Ventas::find()->where(['fk_cli_cliente' => $cliente_id])->orderBy(['venta_id' => SORT_DESC])->limit(5)->all();
+
+        // Consultar los 5 productos más vendidos por este cliente
+        $sqlProducto = "select p.producto_id, p.producto_descripcion, count(1) as cantidad
+            from tb_ven_ventas v
+            join tb_ven_ventas_productos vp on ( v.venta_id = vp.fk_ven_ventas )
+            join tb_pro_productos p on ( vp.fk_pro_productos = p.producto_id )
+            where v.fk_cli_cliente = ".$cliente_id."
+            group by p.producto_id, p.producto_descripcion
+            order by 3 desc;";
+
+        $cnxConexion = Yii::$app->db;
+        $stmtSentencia = $cnxConexion->createCommand($sqlProducto);
+        $productos = $stmtSentencia->queryAll();
+
+
         return $this->render($this->strRuta.'view', [
             'model' => $this->findModel($cliente_id),
+            'ventas' => $ventas,
+            'productos' => $productos,
         ]);
     }
 
@@ -185,7 +206,7 @@ class ClienteController extends Controller
             $model->cliente_barrio = mb_strtoupper($model->cliente_barrio);
             $model->cliente_fttodatos = date('Y-m-d H:i:s');
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             if ($model->save()) {
                 return $this->redirect(['view', 'cliente_id' => $model->cliente_id]);
@@ -327,7 +348,7 @@ class ClienteController extends Controller
             $model->cliente_direccion = mb_strtoupper($model->cliente_direccion);
             $model->cliente_barrio = mb_strtoupper($model->cliente_barrio);
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
             
             if ($model->save())
                 return $this->redirect(['view', 'cliente_id' => $model->cliente_id]);

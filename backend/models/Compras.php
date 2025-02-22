@@ -14,7 +14,7 @@ class Compras extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fk_pro_proveedores', 'compra_fecha_compra'], 'required'],
+            [['fk_pro_proveedores', 'compra_fecha_compra', 'fk_par_forma_pago'], 'required'],
             [['fk_com_estados_compra', 'uc', 'um'], 'integer'],
             [['compra_fecha_compra', 'compra_fecha_confirmacion', 'compra_fecha_cierre', 'compra_fecha_anulacion', 'fc', 'fm'], 'safe'],
         ];
@@ -25,6 +25,7 @@ class Compras extends \yii\db\ActiveRecord
         return [
             'compra_id' => 'Código',
             'fk_pro_proveedores' => 'Proveedor',
+            'fk_par_forma_pago' => 'Forma Pago',
             'compra_fecha_compra' => 'Fecha Compra',
             'compra_fecha_confirmacion' => 'Fecha Confirmación',
             'compra_fecha_cierre' => 'Fecha Cierre',

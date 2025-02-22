@@ -128,3 +128,8 @@ a.desc:after {
     background-color: #563d7c;
     color: white;
 }
+
+.card-db-title {
+    font-size: 14px;
+    color: #999;
+}

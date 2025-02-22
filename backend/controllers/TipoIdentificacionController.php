@@ -63,7 +63,7 @@ class TipoIdentificacionController extends Controller
         {
             $model->tipoiden_descripcion = mb_strtoupper($model->tipoiden_descripcion, 'UTF-8');
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             if ($model->save()) {
                 return $this->redirect(['view', 'tipoiden_id' => $model->tipoiden_id]);
@@ -88,7 +88,7 @@ class TipoIdentificacionController extends Controller
         {
             $model->tipoiden_descripcion = mb_strtoupper($model->tipoiden_descripcion, 'UTF-8');
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
             
             if ($model->save())
                 return $this->redirect(['view', 'tipoiden_id' => $model->tipoiden_id]);

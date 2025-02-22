@@ -64,7 +64,7 @@ class VendedoresController extends Controller
             if ($model->load($this->request->post())) {
                 $model->vendedor_nombre_completo = mb_strtoupper($model->vendedor_nombre_completo, 'UTF-8');
                 $model->fc = date('Y-m-d H:i:s');
-                $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                 $model->crear_usuario = $this->request->post()['Vendedores']['crear_usuario'];
 
@@ -86,7 +86,7 @@ class VendedoresController extends Controller
                     $usuario->fk_seg_perfiles = 3; // 3 - Empleado
                     $usuario->fk_par_estados = 1;
                     $usuario->fc = date('Y-m-d H:i:s');
-                    $usuario->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                    $usuario->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
                     
                     $usuario->save();
 
@@ -118,7 +118,7 @@ class VendedoresController extends Controller
             if ($model->load($this->request->post())) {
                 $model->vendedor_nombre_completo = mb_strtoupper($model->vendedor_nombre_completo, 'UTF-8');
                 $model->fm = date('Y-m-d H:i:s');
-                $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+                $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                 if (isset($this->request->post()['Vendedores']['crear_usuario'])) {
                     $model->crear_usuario = $this->request->post()['Vendedores']['crear_usuario'];
@@ -140,7 +140,7 @@ class VendedoresController extends Controller
                     $usuario->fk_seg_perfiles = 3; // 3 - Empleado
                     $usuario->fk_par_estados = 1;
                     $usuario->fc = date('Y-m-d H:i:s');
-                    $usuario->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                    $usuario->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
                     
                     $usuario->save();
 

@@ -50,7 +50,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
                     ],
                     'venta_fecha_venta',
-                    'fk_ven_estado_venta',
                     [
                         'label'=>'Estado',
                         'value'=>function($data){

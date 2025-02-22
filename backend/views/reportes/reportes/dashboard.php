@@ -1,6 +1,8 @@
 <?php
 
 use yii\helpers\Html;
+use yii\jui\DatePicker;
+use yii\widgets\ActiveForm;
 use miloschuman\highcharts\Highcharts;
 use kartik\icons\Icon;
 
@@ -10,51 +12,68 @@ $this->title = 'Dashboard';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="reportes-dashboard">
     <h4><?= Html::encode($this->title) ?></h4>
+    <?php $form = ActiveForm::begin(); ?>
+        <div class="row mb-3">
+            <div class="col-sm-4">
+                <label for="fecha-inicial">Fecha Inicial</label>
+                <?= DatePicker::widget([
+                    'name' => 'fecha_inicial',
+                    'options' => [
+                        'class' => 'form-control form-control-sm',
+                        'readonly' => true,
+                        'value' => $model->fecha_inicial
+                    ],
+                    'clientOptions' => [
+                        'changeMonth'=>true,
+                        'changeYear'=>true,
+                        'language' => 'es',
+                        'maxDate' => '0',
+                        'onChange' => new yii\web\JsExpression('function(dateText, inst) { validarFechas(); }'),
+                    ],
+                    'dateFormat' => 'php:Y-m-d',
+                ]) ?>   
+            </div>
+            <div class="col-sm-4">
+                <label for="fecha-final">Fecha Final</label>
+                <?= DatePicker::widget([
+                    'name' => 'fecha_final',
+                    'options' => [
+                        'class' => 'form-control form-control-sm',
+                        'readonly' => true,
+                        'value' => $model->fecha_final
+                    ],
+                    'clientOptions' => [
+                        'changeMonth'=>true,
+                        'changeYear'=>true,
+                        'language' => 'es',
+                        'maxDate' => '0',
+                        'onSelect' => new yii\web\JsExpression('function(dateText, inst) { validarFechas(); }'),
+                    ],
+                    'dateFormat' => 'php:Y-m-d',
+                ]) ?> 
+            </div>
+            <div class="col-sm-4">
+                <?= Html::submitButton(Icon::show('chart-line').' Generar', ['class' => 'btn btn-sm btn-azul mt-4']) ?>
+            </div>
+        </div>
+    <?php ActiveForm::end(); ?>
+
+    <?php if (isset($data['error']) && $data['error']): ?>
+        <div class="alert alert-danger">
+            <?= $data['mensaje'] ?>
+        </div>
+    <?php endif; ?>
+
     <div class="row">
         <div class="col-sm-4 mb-3">
             <div class="card">
                 <div class="card-body">
-                    <p>
-                        <?= Html::a(Icon::show('arrow-right').'Ir a ventas', ['ventas/index'], ['class' => 'btn btn-sm btn-info float-right']) ?>
-                    </p>
-                    <br>
-                    <?php
-                    echo Highcharts::widget([
-                        'options' => [
-                            'chart' => [
-                                'type' => 'line',
-                                'height' => 200,
-                            ],
-                            'title' => ['text' => 'Ventas de los Últimos 5 Días'],
-                            'xAxis' => [
-                                'categories' => array_column($ventasUltimos5Dias, 'dia'),
-                                'labels' => ['style' => ['fontSize' => '10px']]
-                            ],
-                            'yAxis' => [
-                                'title' => ['text' => 'Ventas'],
-                                'labels' => ['style' => ['fontSize' => '10px']]
-                            ],
-                            'legend' => ['enabled' => false],
-                            'plotOptions' => [
-                                'line' => [
-                                    'marker' => [
-                                        'enabled' => true
-                                    ]
-                                ]
-                            ],
-                            'series' => [
-                                [
-                                    'name' => 'Ventas',
-                                    'data' => array_column($ventasUltimos5Dias, 'total_ventas'),
-                                    'color' => '#7cb5ec'
-                                ]
-                            ],
-                            'credits' => ['enabled' => false]
-                        ]
-                    ]);
-                    ?>
+                    <label class="card-db-title"><?= Icon::show('shopping-bag') ?> Ventas</label>
+                    <h3>$<?= number_format($totalVentas, 2, ',', '.') ?></h3>
+                    <?= Html::a(Icon::show('arrow-right').'Ir a ventas', ['ventas/index'], ['class' => 'card-link']) ?>
                 </div>
             </div>
         </div>
@@ -62,44 +81,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-4 mb-3">
             <div class="card">
                 <div class="card-body">
-                    <p>
-                        <?= Html::a(Icon::show('arrow-right').'Ir a compras', ['compras/index'], ['class' => 'btn btn-sm btn-info float-right']) ?>
-                    </p><br>
-                    <?php
-                    echo Highcharts::widget([
-                        'options' => [
-                            'chart' => [
-                                'type' => 'line',
-                                'height' => 200,
-                            ],
-                            'title' => ['text' => 'Compras de los Últimos 5 Días'],
-                            'xAxis' => [
-                                'categories' => array_column($comprasUltimos5Dias, 'dia'),
-                                'labels' => ['style' => ['fontSize' => '10px']]
-                            ],
-                            'yAxis' => [
-                                'title' => ['text' => 'Compras'],
-                                'labels' => ['style' => ['fontSize' => '10px']]
-                            ],
-                            'legend' => ['enabled' => false],
-                            'plotOptions' => [
-                                'line' => [
-                                    'marker' => [
-                                        'enabled' => true
-                                    ]
-                                ]
-                            ],
-                            'series' => [
-                                [
-                                    'name' => 'Compras',
-                                    'data' => array_column($comprasUltimos5Dias, 'total_compras'),
-                                    'color' => '#7cb5ec'
-                                ]
-                            ],
-                            'credits' => ['enabled' => false]
-                        ]
-                    ]);
-                    ?>
+                    <label class="card-db-title"><?= Icon::show('cart-arrow-down') ?> Compras</label>
+                    <h3>$<?= number_format($totalCompras, 2, ',', '.') ?></h3>
+                    <?= Html::a(Icon::show('arrow-right').'Ir a compras', ['compras/index'], ['class' => 'card-link']) ?>
                 </div>
             </div>
         </div>
@@ -107,9 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-4 mb-3">
             <div class="card">
                 <div class="card-body">
-                    <p>
-                        <?= Html::a(Icon::show('arrow-right').'Ir a clientes', ['clientes/index'], ['class' => 'btn btn-sm btn-info float-right']) ?>
-                    </p><br>
+                    <label class="card-db-title"><?= Icon::show('users') ?> Clientes con más compras</label>
                     <?php
                     echo Highcharts::widget([
                         'options' => [
@@ -117,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'type' => 'pie',
                                 'height' => 300,
                             ],
-                            'title' => ['text' => 'Clientes con más compras'],
+                            'title' => ['text' => ''],
                             'plotOptions' => [
                                 'pie' => [
                                     'allowPointSelect' => true,
@@ -150,6 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ]);
                     ?>
+                    <?= Html::a(Icon::show('arrow-right').'Ir a clientes', ['clientes/index'], ['class' => 'card-link']) ?>
                 </div>
             </div>
         </div>
@@ -157,9 +140,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-4 mb-3">
             <div class="card">
                 <div class="card-body">
-                    <p>
-                        <?= Html::a(Icon::show('arrow-right').'Ir a productos', ['productos/index'], ['class' => 'btn btn-sm btn-info float-right']) ?>
-                    </p><br>
+                    <label class="card-db-title"><?= Icon::show('chart-pie') ?> Productos más vendidos</label>
                     <?php 
                         echo Highcharts::widget([
                             'options' => [
@@ -167,7 +148,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'type' => 'pie',
                                     'height' => 300,
                                 ],
-                                'title' => ['text' => 'Productos más vendidos en el último mes'],
+                                'title' => ['text' => ''],
                                 'plotOptions' => [
                                     'pie' => [
                                         'allowPointSelect' => true,
@@ -200,65 +181,21 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                         ]);
                     ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-4 mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <p>
-                        <?= Html::a(Icon::show('arrow-right').'Ir a productos', ['productos/index'], ['class' => 'btn btn-sm btn-info float-right']) ?>
-                    </p><br>
-                    <?php 
-                            echo Highcharts::widget([   
-                            'options' => [
-                                'chart' => [
-                                    'type' => 'column',
-                                    'height' => 300,
-                                ],
-                                'title' => ['text' => 'Productos próximos a agotarse'],
-                                'xAxis' => [
-                                    'categories' => array_column($productosVencidos, 'producto_nombre'),
-                                ],
-                                'yAxis' => [
-                                    'title' => ['text' => 'Stock'],
-                                    'min' => -10,
-                                    'max' => 10
-                                ],
-                                'series' => [
-                                    [
-                                        'name' => 'Stock',
-                                        'data' => array_map(function($producto) {
-                                            return [
-                                                'y' => (int)$producto['producto_stock'],
-                                                'color' => '#36a2eb',
-                                                'url' => \yii\helpers\Url::to(['productos/view', 'producto_id' => $producto['producto_id']])
-                                            ];
-                                        }, $productosVencidos)
-                                    ]
-                                ],
-                                'tooltip' => [
-                                    'pointFormat' => '{series.name}: <b>{point.y}</b>'
-                                ],
-                                'plotOptions' => [
-                                    'column' => [
-                                        'dataLabels' => [
-                                            'enabled' => true,
-                                            'format' => '{y}'
-                                        ]
-                                    ]
-                                ],
-                                'credits' => ['enabled' => false]
-                            ],
-                            'scripts' => [
-                                'modules/exporting',
-                                'modules/export-data',
-                            ],
-                        ]);
-                    ?>
+                    <?= Html::a(Icon::show('arrow-right').'Ir a productos', ['productos/index'], ['class' => 'card-link']) ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function validarFechas() {
+        var fechaInicial = document.getElementsByName('fecha_inicial')[0].value;
+        var fechaFinal = document.getElementsByName('fecha_final')[0].value;
+
+        if (fechaInicial > fechaFinal) {
+            alert('La fecha inicial no puede ser mayor a la fecha final');
+            document.getElementsByName('fecha_final')[0].value = '';
+        }
+    }
+</script>

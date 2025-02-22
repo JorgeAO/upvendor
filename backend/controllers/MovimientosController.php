@@ -64,7 +64,7 @@ class MovimientosController extends Controller
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
                 $model->fc = date('Y-m-d H:i:s');
-                $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+                $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
                 // Consultar el tipo de movimiento para obtener la operación
                 $tipoMovimiento = TipoMovimiento::find()->where(['tipomovi_id' => $model->fk_caj_tipo_movimiento])->one();
@@ -225,7 +225,7 @@ class MovimientosController extends Controller
             $movimiento->fk_caj_tipo_movimiento = 6;
             $movimiento->movimiento_observacion = "Traslado a la caja " . $cajaDestino->caja_descripcion;
             $movimiento->fc = date('Y-m-d H:i:s');
-            $movimiento->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $movimiento->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
             $movimiento->save();
 
             // Movimiento de entrada a la caja de destino
@@ -236,7 +236,7 @@ class MovimientosController extends Controller
             $movimiento->fk_caj_tipo_movimiento = 7;
             $movimiento->movimiento_observacion = "Traslado desde la caja " . $cajaOrigen->caja_descripcion;
             $movimiento->fc = date('Y-m-d H:i:s');
-            $movimiento->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $movimiento->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
             $movimiento->save();
 
             return $this->redirect(['index']);

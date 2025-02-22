@@ -67,7 +67,7 @@ class AtributosValorController extends Controller
             $model->atrivalor_valor = mb_strtoupper($model->atrivalor_valor, 'UTF-8');
             $model->fk_pro_atributos = $atributo_id;
             $model->fc = date('Y-m-d H:i:s');
-            $model->uc = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->uc = $_SESSION['as_usuario_sesion']['usuarios_id'];
 
             if ($model->save()) {
                 return $this->redirect([
@@ -96,7 +96,7 @@ class AtributosValorController extends Controller
         {
             $model->atrivalor_valor = mb_strtoupper($model->atrivalor_valor, 'UTF-8');
             $model->fm = date('Y-m-d H:i:s');
-            $model->um = $_SESSION['usuario_sesion']['usuarios_id'];
+            $model->um = $_SESSION['as_usuario_sesion']['usuarios_id'];
             
             if ($model->save())
                 return $this->redirect(['view', 'atrivalor_id' => $model->atrivalor_id]);

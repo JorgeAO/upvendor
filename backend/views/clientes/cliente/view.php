@@ -1,5 +1,6 @@
 <?php
 use app\models\Estados;
+use app\models\EstadosVenta;
 use app\models\TipoIdentificacion;
 use app\models\TipoPersona;
 use kartik\icons\Icon;
@@ -112,21 +113,65 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-6">
             <div class="card">
                 <div class="card-header bg-purpura">
-                    Últimas 5 Compras
+                    Últimas Compras del Cliente
                 </div>
                 <div class="card-body">
-                    [tabla]
+                    <?php if (!empty($ventas)): ?>
+                        <table class="table table-striped table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($ventas as $venta): ?>
+                                    <tr>
+                                        <td><?= Html::a($venta->venta_id, ['ventas/view', 'venta_id' => $venta->venta_id]) ?></td>
+                                        <td><?= Yii::$app->formatter->asDate($venta->venta_fecha_venta, 'php:Y-m-d') ?></td>
+                                        <td><?= 
+                                            EstadosVenta::findOne($venta->fk_ven_estado_venta)->ventesta_descripcion == 'Anulada' ?
+                                                '<span class="badge badge-danger">Anulada</span>' :
+                                                '<span class="badge badge-success">'.EstadosVenta::findOne($venta->fk_ven_estado_venta)->ventesta_descripcion.'</span>'
+                                        ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <p>No hay compras recientes.</p>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="card mt-3">
                 <div class="card-header bg-purpura">
-                    Top 5 Productos Favoritos
+                    Productos Favoritos
                 </div>
                 <div class="card-body">
-                    [tabla]
+                    <?php if (!empty($productos)): ?>
+                        <table class="table table-striped table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($productos as $producto): ?>
+                                    <tr>
+                                        <td><?= Html::a($producto['producto_descripcion'], ['productos/view', 'producto_id' => $producto['producto_id']]) ?></td>
+                                        <td><?= $producto['cantidad'] ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <p>No hay productos favoritos.</p>
+                    <?php endif; ?>
                 </div>
             </div>
-            <div class="card mt-3">
+            <!--div class="card mt-3">
                 <div class="card-header bg-purpura">
                     Acciones Rápidas
                 </div>
@@ -134,7 +179,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::a(Icon::show('shopping-bag').' Nueva Venta', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
                     <?= Html::a(Icon::show('chart-line').' Ver Compras', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
                 </div>
-            </div>
+            </div-->
         </div>
     </div>
 
