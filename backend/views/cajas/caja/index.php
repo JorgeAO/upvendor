@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <div class="alert alert-info">
 
-        <h5>Total: <?= Yii::$app->formatter->asCurrency((float)$totalEnCaja, '$') ?></h5>
+        <h5>Total: <?= Yii::$app->formatter->asCurrency((float)$totalEnCaja, 'USD') ?></h5>
     </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
