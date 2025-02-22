@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label'=>'Monto',
                 'value'=>function($data) {
-                    return Yii::$app->formatter->asCurrency($data->caja_monto, '$');
+                    return Yii::$app->formatter->asCurrency($data->caja_monto, 'USD');
                 },
             ],
             [
