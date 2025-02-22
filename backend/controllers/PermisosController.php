@@ -116,7 +116,8 @@ class PermisosController extends Controller
 
         $rslResultado = $stmtSentencia->queryAll();
 
-        echo json_encode($rslResultado);
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $rslResultado;
     }
 
     public static function validarPermiso($intOpcion, $chrAccion)
