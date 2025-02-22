@@ -89,7 +89,7 @@ class PermisosController extends Controller
         $jsonRta->mensaje = 'El proceso se realizó con éxito';
 
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return $$jsonRta;
+        return $jsonRta;
     }
     
     public function actionConsultarPermisos()
