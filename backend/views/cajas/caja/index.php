@@ -20,7 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Icon::show('plus').' Agregar', ['create'], ['class' => 'btn btn-azul btn-sm']) ?>
     </p>
     <div class="alert alert-info">
-        <h5>Total: <?= Yii::$app->formatter->asCurrency($totalEnCaja, '$') ?></h5>
+
+        <h5>Total: <?= Yii::$app->formatter->asCurrency((float)$totalEnCaja, '$') ?></h5>
     </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
