@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-6">
             <?= DetailView::widget([
                 'model' => $model,
-                'options' => ['class' => 'table table-striped table-hover table-sm'],
+                'options' => ['class' => 'table table-striped table-hover table-sm table-responsive-md'],
                 'attributes' => [
                     'proveedor_id',
                     [
@@ -152,8 +152,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     Acciones Rápidas
                 </div>
                 <div class="card-body">
-                    <?= Html::a(Icon::show('cart-arrow-down').' Nueva Compra', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
-                    <?= Html::a(Icon::show('chart-line').' Ver Compras', ['index'], ['class' => 'btn btn-sm btn-azul']) ?>
+                    <!--?= Html::a(Icon::show('cart-arrow-down').' Nueva Compra', ['index'], ['class' => 'btn btn-sm btn-azul']) ?-->
+                    <!--?= Html::a(Icon::show('chart-line').' Ver Compras', ['index'], ['class' => 'btn btn-sm btn-azul']) ?-->
                 </div>
             </div>
         </div>

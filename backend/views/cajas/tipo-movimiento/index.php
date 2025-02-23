@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'tableOptions' => ['class' => 'table table-striped table-hover table-sm'],
+        'tableOptions' => ['class' => 'table table-striped table-hover table-sm table-responsive-md'],
         'columns' => [
             'tipomovi_id',
             'tipomovi_descripcion',

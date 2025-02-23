@@ -19,10 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="permisos-index">
-    
     <h4><?= Html::encode($this->title) ?></h4>
     <div class="row">
-        <div class="col-4">
+        <div class="col-sm-4 col-md-4">
             <label>Perfil</label>
             <?= Html::dropDownList(
                 "fk_par_perfiles", 
@@ -40,11 +39,11 @@ $this->params['breadcrumbs'][] = $this->title;
             <div id="div_esperar"></div>
 
         </div>
-        <div class="col-8">
+        <div class="col-sm-8 col-md-8">
             <label>Permisos</label>
             <form id="frm_permisos">
             <div id="div_permisos">
-                <table class="table table-sm table-bordered table-striped">
+                <table class="table table-sm table-bordered table-striped table-responsive-md">
                     <thead>
                         <tr>
                             <th scope="col">Código</th>

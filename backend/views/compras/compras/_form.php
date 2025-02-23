@@ -91,7 +91,7 @@ Icon::map($this);
                     Productos
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered table-sm table-striped table-hover" id="tblProductos">
+                    <table class="table table-bordered table-sm table-striped table-hover table-responsive-md" id="tblProductos">
                         <thead>
                             <tr>
                                 <th style="width: 45%;">Producto</th>
