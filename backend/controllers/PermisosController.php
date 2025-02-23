@@ -138,6 +138,10 @@ class PermisosController extends Controller
             return [
                 'error' => true,
                 'mensaje' => 'La sesión ha caducado',
+                'datos' => [
+                    'url' => ['/site/login'],
+                    'enlace' => 'Ir a inicio de sesión'
+                ]
             ];
         }
 

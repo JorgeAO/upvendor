@@ -108,9 +108,15 @@ a.desc:after {
     color: white;
 }
 
-.btn-purpura, .btn-purpura:hover {
+.btn-personalizado {
     background-color: #563d7c;
     color: white;
+}
+
+.btn-personalizado:hover {
+    background-color: white;
+    border-color: #563d7c;
+    color: #563d7c;
 }
 
 .btn-outline-purpura, .btn-outline-purpura:hover {

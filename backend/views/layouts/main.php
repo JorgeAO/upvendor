@@ -56,10 +56,12 @@ $arrMenu = PermisosController::construirMenu();
 
             <div class="alert alert-light" style="font-size:14px" role="alert">
                 <?php
-                $fechaActual = date('Y-m-d');
-                echo $fechaActual . ' ';
+                    if (isset($_SESSION['as_usuario_sesion'])) {
+                        $fechaActual = date('Y-m-d');
+                        echo $fechaActual . ' <span id="reloj"></span>';
+                    }
                 ?>
-                <span id="reloj"></span>
+                
                 <script>
                 function actualizarReloj() {
                     var ahora = new Date();
