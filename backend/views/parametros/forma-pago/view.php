@@ -37,7 +37,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'label'=>'Caja',
                             'value'=>function($data){
-                                return Caja::find()->where(['caja_id'=>$data->fk_caj_cajas])->all()[0]->caja_descripcion;
+                                $caja = Caja::find()->where(['caja_id' => $data->fk_caj_cajas])->one();
+                                return $caja ? $caja->caja_descripcion : 'NO HAY CAJA ASIGNADA';
                             },
                             'attribute'=>'fk_caj_cajas',
                             'filter'=>ArrayHelper::map(Caja::find()->asArray()->all(), 'caja_id', 'caja_descripcion'),

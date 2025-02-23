@@ -46,7 +46,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'label'=>'Vendedor',
                         'value'=>function($data){
-                            return Vendedores::find()->where(['vendedor_id'=>$data->fk_ven_vendedor])->all()[0]->vendedor_nombre_completo;
+                            $vendedor = Vendedores::find()->where(['vendedor_id'=>$data->fk_ven_vendedor])->all();
+                            return count($vendedor) > 0 ? $vendedor[0]->vendedor_nombre_completo : 'NO ENCONTRADO';
                         }
                     ],
                     'venta_fecha_venta',
@@ -71,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         Productos
                     </div>
                     <div class="card-body">
-                        <table class="table table-sm table-bordered table-striped table-hover">
+                        <table class="table table-sm table-bordered table-striped table-hover table-responsive-md">
                             <tr>
                                 <th style="width: 40%;">Producto</th>
                                 <th style="width: 12%;">Cantidad</th>

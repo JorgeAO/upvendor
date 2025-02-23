@@ -10,10 +10,10 @@ Icon::map($this);
 <div class="perfiles-form">
     <?php $form = ActiveForm::begin(); ?>
     <div class="row">
-        <div class="col-sm-6"   >
+        <div class="col-sm-12 col-md-6">
             <?= $form->field($model, 'perfiles_descripcion')->textInput(['maxlength' => true]) ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-12 col-md-6">
             <?php 
                 if (isset($model->perfiles_id))
                     echo $form->field($model, 'fk_par_estados')->dropDownList(ArrayHelper::map(Estados::find()->asArray()->all(), 'estados_id', 'estados_descripcion'));

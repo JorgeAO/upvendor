@@ -30,10 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endif; ?>
     </p>
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4 col-md-4">
             <?= DetailView::widget([
                 'model' => $model,
-                'options' => ['class' => 'table table-striped table-hover table-sm'],
+                'options' => ['class' => 'table table-striped table-hover table-sm table-responsive-md'],
                 'attributes' => [
                     'compra_id',
                     [
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Productos
                 </div>
                 <div class="card-body">
-                    <table class="table table-sm table-bordered table-striped table-hover">
+                    <table class="table table-sm table-bordered table-striped table-hover table-responsive-md">
                         <tr>
                             <th style="width: 40%;">Producto</th>
                             <th style="width: 12%;">Cantidad</th>

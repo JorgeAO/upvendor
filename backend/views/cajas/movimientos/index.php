@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'tableOptions' => ['class' => 'table table-striped table-hover table-sm'],
+        'tableOptions' => ['class' => 'table table-striped table-hover table-sm table-responsive-md'],
         'columns' => [
             [
                 'attribute' => 'movimiento_id',
@@ -43,6 +43,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label'=>'Caja',
                 'value'=>function($data) {
+                    $caja = Caja::find()->where(['caja_id'=>$data->fk_caj_cajas])->all();
+                    if (count($caja) == 0) {
+                        return 'NO ASIGNADA';
+                    }
                     return Caja::find()->where(['caja_id'=>$data->fk_caj_cajas])->all()[0]->caja_descripcion;
                 },
                 'attribute'=>'fk_caj_cajas',
